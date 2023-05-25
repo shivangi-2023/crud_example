@@ -32,16 +32,10 @@ namespace crud_example.Models
         //[Required(ErrorMessage = "Skills are required.")]
         ///public List<string> Skills { get; set; }
         ///
-        public EmpModel()
-        {
-            SubjectList = new List<SelectListItem>();
-        }
-        [DisplayName("City")]
-        public List<SelectListItem> SubjectList
-        {
-            get;
-            set;
-        }
+        //[Required(ErrorMessage = "City is required.")]
+        //[Display(Name = "City")]
+        public int CityId { get; set; }
+        
     }
 
 }

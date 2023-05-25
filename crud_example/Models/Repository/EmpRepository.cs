@@ -11,24 +11,24 @@ using System.Configuration.Provider;
 namespace crud_example.Models.Repository
 {
     public class EmpRepository
-    {                     
-            public SqlConnection con;
-            //To Handle connection related activities
-            private void connection()
-            
+    {
+        public SqlConnection con;
+        //To Handle connection related activities
+        private void connection()
+
         {
             string constr = @"Data Source=DESKTOP-6BQAM4C;Initial Catalog=Userdetails_skills;Persist Security Info=True;User ID=sa;Password=123";
 
-                   //string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
-                con = new SqlConnection(constr);
-            }
-            
+            //string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
+            con = new SqlConnection(constr);
+        }
+
         //To Add Employee details
         public void AddEmployee(EmpModel empModel)
+        {
+
+            try
             {
-               
-                try
-                {
 
                 DynamicParameters pram = new DynamicParameters();
                 pram.Add("Username", empModel.Username);
@@ -36,7 +36,7 @@ namespace crud_example.Models.Repository
                 pram.Add("Email", empModel.Email);
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
-               
+                pram.Add("City", empModel.CityId);
                 connection();
                 con.Open();
                 con.Execute("AddNewEmpDetails", pram, commandType: CommandType.StoredProcedure);
@@ -44,20 +44,22 @@ namespace crud_example.Models.Repository
 
             }
             catch (Exception ex)
-                {
-                    throw ex;
-                }
+            {
+                throw ex;
             }
+        }
         public List<EmpModel> GetAllEmployees()
         {
             try
-                {
+            {
                 connection();
                 con.Open();
-                IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "SELECT Id as Userid, Username, Password, Email, DOB, Gender FROM User_Info ORDER BY Username ASC").ToList();
+                //IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "SELECT Id as Userid, Username, Password, Email, DOB, Gender,City FROM User_Info ORDER BY Username ASC").ToList();
+                //con.Open();
+                IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "GetEmployees").ToList();
 
                 con.Close();
-                return EmpList.ToList();
+                return emp.ToList();
             }
             catch (Exception)
             {
@@ -80,7 +82,7 @@ namespace crud_example.Models.Repository
                 pram.Add("Email", empModel.Email);
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
-
+                pram.Add("City", empModel.CityId);
                 connection();
                 con.Open();
                 con.Execute("UpdateEmpDetails", pram, commandType: CommandType.StoredProcedure);
@@ -97,7 +99,7 @@ namespace crud_example.Models.Repository
             try
             {
                 DynamicParameters pram = new DynamicParameters();
-                pram.Add("Userid", id); 
+                pram.Add("Userid", id);
                 connection();
                 con.Open();
                 con.Execute("DeleteEmpById", pram, commandType: CommandType.StoredProcedure);
@@ -109,6 +111,16 @@ namespace crud_example.Models.Repository
                 //Log error as per your need 
                 throw ex;
             }
+        }
+        public IEnumerable<City> GetCities()
+        {
+            connection();
+            con.Open();
+            
+            IList<City> city = SqlMapper.Query<City>(con, "GetAllCity").ToList();
+
+            con.Close();
+            return city.ToList();
         }
     }
 }

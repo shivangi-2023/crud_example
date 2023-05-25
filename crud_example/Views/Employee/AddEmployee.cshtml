@@ -59,26 +59,37 @@
 </label>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-md-2", style = "color: white;">
-                Skills
+    
+       
+        <div class="col-md-10">
+            @Html.Label("City")
+            @*@Html.DropDownList("City", "Select City")*@
+            @*@Html.DropDownListFor(model => model.City, new SelectList(ViewData["CityList"], "Id", "Name"), "Select City")*@
+            @*@Html.DropDownListFor(model => model.City, ViewBag.CityList as SelectList, "Select City", new { @class = "form-control" })*@
 
-            </label>
-            <div class="col-md-10">
-                <label class="checkbox-inline">
-                    @Html.CheckBox("Csharp", false) <span style="color: white;">
-                        C#
-                </label>
-                <label class="checkbox-inline">
-                    @Html.CheckBox("Java", false)<span style="color: white;">
-    Java
-</label>
-                <label class="checkbox-inline">
-                    @Html.CheckBox("Python", false)<span style="color: white;">
-    Python
-</label>
-                <br /><br />
-            </div>
+            @Html.DropDownList("CityId", new SelectList(ViewData["CityList"] as List<crud_example.Models.City>, "CityId", "CityName"), "-- Select City Name --", new { @class = "Search" })
+
+            @*@html.dropdownlistfor(model => model.city, viewbag.citylist, "-- select city --", new { @class = "form-control" })
+        @html.validationmessagefor(model => model.city, "", new { @class = "text-danger" })*@
+        </div>
+           
+
+            @*<div class="col-md-10">
+                        <label class="checkbox-inline">
+                            @Html.CheckBox("Csharp", false) <span style="color: white;">
+                                C#
+                        </label>
+                        <label class="checkbox-inline">
+                            @Html.CheckBox("Java", false)<span style="color: white;">
+            Java
+        </label>
+                        <label class="checkbox-inline">
+                            @Html.CheckBox("Python", false)<span style="color: white;">
+            Python
+        </label>*@
+
+            <br /><br />
+        
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-primary btn btn-primary btn-block btn-block custom-button " />
@@ -90,8 +101,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+ </div>
+    
     }
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>

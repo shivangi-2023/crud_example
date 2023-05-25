@@ -1,5 +1,4 @@
-﻿
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using crud_example.Models.Repository;
 using crud_example.Models;
 using System.Collections.Generic;
@@ -20,19 +19,12 @@ namespace crud_example.Controllers
         public ActionResult AddEmployee()
         {
             EmpRepository EmpRepo = new EmpRepository();
+            //var viewModel = new City();
+            //viewModel.Cities = EmpRepo.GetCities();
+            ViewData["CityList"] = EmpRepo.GetCities();
+            return View();
+           
 
-            // Get the list of subjects from the repository
-            List<SelectListItem> subjectList = EmpRepo.GetSubjects();
-
-            // Assign the subject list to a property in the model
-            EmpModel model = new EmpModel
-            {
-                SubjectList = subjectList
-            };
-
-            return View(model);
-
-            //return View();
         }
         // POST: Employee/AddEmployee
         [HttpPost]
@@ -40,9 +32,10 @@ namespace crud_example.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+               if (ModelState.IsValid)
                 {
                     EmpRepository EmpRepo = new EmpRepository();
+                    ViewData["CityList"] = EmpRepo.GetCities();
                     EmpRepo.AddEmployee(Emp);
                     ViewBag.Message = "Records added successfully.";
                     //TempData["SuccessMessage"] = "Records added successfully.";
@@ -67,7 +60,7 @@ namespace crud_example.Controllers
         {
             try
             {
-                if (ModelState.IsValid) 
+                if (ModelState.IsValid)
                 {
                     EmpRepository EmpRepo = new EmpRepository();
                     EmpRepo.UpdateEmployee(obj);
