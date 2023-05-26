@@ -35,6 +35,8 @@ namespace crud_example.Models
         //[Required(ErrorMessage = "City is required.")]
         //[Display(Name = "City")]
         public int CityId { get; set; }
+
+        public String CityName { get; set; }
         
     }
 

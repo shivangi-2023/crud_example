@@ -11,33 +11,33 @@
     </div>
     <hr />
     <h1 style=" color:navy; font-size:23px;">WELCOME to My Login Form!!!!</h1>
-    <div class="container" style="border: 1px solid green; width: 400px; height: 420px; background-color: lightseagreen; ">
+    <div class="container" style="border: 4px solid green; width: 380px; height: 600px; background-color: lightseagreen; ">
 
         <div  style="text-align: center;"><h4 style=" color:ghostwhite; font-size:23px;">LOGIN HERE!!</h4></div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })
+            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })<br /><br />
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your Username" } })
                 @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })<br /><br />
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your password" } })
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })<br /><br />
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your Email" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2" , style = "color: white;" })
+            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })<br /><br />
             <div class="col-md-10">
                 @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your Birthdate" } })
                 @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
@@ -62,36 +62,20 @@
     
        
         <div class="col-md-10">
-            @Html.Label("City")
-            @*@Html.DropDownList("City", "Select City")*@
-            @*@Html.DropDownListFor(model => model.City, new SelectList(ViewData["CityList"], "Id", "Name"), "Select City")*@
-            @*@Html.DropDownListFor(model => model.City, ViewBag.CityList as SelectList, "Select City", new { @class = "form-control" })*@
-
+            &nbsp;
+            @Html.Label("City", htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })&nbsp;
+            <br />
             @Html.DropDownList("CityId", new SelectList(ViewData["CityList"] as List<crud_example.Models.City>, "CityId", "CityName"), "-- Select City Name --", new { @class = "Search" })
 
-            @*@html.dropdownlistfor(model => model.city, viewbag.citylist, "-- select city --", new { @class = "form-control" })
-        @html.validationmessagefor(model => model.city, "", new { @class = "text-danger" })*@
+
         </div>
            
-
-            @*<div class="col-md-10">
-                        <label class="checkbox-inline">
-                            @Html.CheckBox("Csharp", false) <span style="color: white;">
-                                C#
-                        </label>
-                        <label class="checkbox-inline">
-                            @Html.CheckBox("Java", false)<span style="color: white;">
-            Java
-        </label>
-                        <label class="checkbox-inline">
-                            @Html.CheckBox("Python", false)<span style="color: white;">
-            Python
-        </label>*@
 
             <br /><br />
         
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-12">
+                    <br />
                     <input type="submit" value="Save" class="btn btn-primary btn btn-primary btn-block btn-block custom-button " />
                 </div>
             </div>

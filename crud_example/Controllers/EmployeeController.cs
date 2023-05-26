@@ -19,8 +19,7 @@ namespace crud_example.Controllers
         public ActionResult AddEmployee()
         {
             EmpRepository EmpRepo = new EmpRepository();
-            //var viewModel = new City();
-            //viewModel.Cities = EmpRepo.GetCities();
+           
             ViewData["CityList"] = EmpRepo.GetCities();
             return View();
            
@@ -52,6 +51,8 @@ namespace crud_example.Controllers
         public ActionResult EditEmpDetails(int id)
         {       
            EmpRepository EmpRepo = new EmpRepository();
+            ViewData["CityList"] = EmpRepo.GetCities();
+
             return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Userid == id));
         }
         // POST:Update the details into database
@@ -63,6 +64,8 @@ namespace crud_example.Controllers
                 if (ModelState.IsValid)
                 {
                     EmpRepository EmpRepo = new EmpRepository();
+                    ViewData["CityList"] = EmpRepo.GetCities();
+
                     EmpRepo.UpdateEmployee(obj);
                     return RedirectToAction("GetAllEmpDetails");
                 }

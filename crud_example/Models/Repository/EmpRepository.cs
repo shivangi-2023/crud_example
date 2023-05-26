@@ -54,8 +54,7 @@ namespace crud_example.Models.Repository
             {
                 connection();
                 con.Open();
-                //IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "SELECT Id as Userid, Username, Password, Email, DOB, Gender,City FROM User_Info ORDER BY Username ASC").ToList();
-                //con.Open();
+              
                 IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "GetEmployees").ToList();
 
                 con.Close();
@@ -82,7 +81,7 @@ namespace crud_example.Models.Repository
                 pram.Add("Email", empModel.Email);
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
-                pram.Add("City", empModel.CityId);
+                pram.Add("city_id", empModel.CityId);
                 connection();
                 con.Open();
                 con.Execute("UpdateEmpDetails", pram, commandType: CommandType.StoredProcedure);

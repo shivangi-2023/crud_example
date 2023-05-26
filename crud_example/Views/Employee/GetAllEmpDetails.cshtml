@@ -5,36 +5,43 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Username)
+        <th style="background-color: lightgray;, border: 1px solid black;">
+            <span style="color: midnightblue">
+                @Html.DisplayNameFor(model => model.Username)
+            </span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
+        <th style="background-color: lightgray;">
+            <span style="color: midnightblue;">
+                @Html.DisplayNameFor(model => model.Password)
+            </span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
+        <th style="background-color: lightgray;">
+            <span style="color: midnightblue;">
+                @Html.DisplayNameFor(model => model.Email)
+            </span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
+        <th style="background-color: lightgray;">
+            <span style="color: midnightblue;">
+                @Html.DisplayNameFor(model => model.DOB)
+            </span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
+        <th style="background-color: lightgray;">
+            <span style="color: midnightblue;">
+                @Html.DisplayNameFor(model => model.Gender)
+            </span>
         </th>
-        @*<th>
-            C#
+        <th  style="background-color: lightgray;">
+            <span style="color: midnightblue;">
+                @Html.DisplayNameFor(model => model.CityName)
+            </span>
         </th>
-        <th>
-            Java
-        </th>
-        <th>
-            Python
-        </th>*@
+        
         <th></th>
     </tr>
     @foreach (var item in Model)
     {
         @Html.HiddenFor(model => item.Userid)
-<tr>
+<tr style="background-color: lightblue;">
     <td>
         @Html.DisplayFor(modelItem => item.Username)
     </td>
@@ -50,23 +57,15 @@
     <td>
         @Html.DisplayFor(modelItem => item.Gender)
     </td>
-    @*<td>
-            @Html.CheckBoxFor(modelItem => item.IsInterestedInCsharp) C#
-        </td>
-        <td>
-            @Html.CheckBoxFor(modelItem => item.IsInterestedInJava) Java
-        </td>
-        <td>
-            @Html.CheckBoxFor(modelItem => item.IsInterestedInPython) Python
-        </td>*@
-    @*<td>
-            @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }) |
-            @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
-        </td>*@
-<td>
-    @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }, new { style = "color: blue; font-weight: bold;" }) &nbsp;&nbsp;&nbsp;|
-    @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
-</td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CityName)
+    </td>
+
+
+    <td style="background-color:white">
+        @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }, new { style = "color: blue; font-weight: bold;" }) &nbsp;&nbsp;&nbsp;|
+        @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
+    </td>
 </tr>
     }
 </table>
