@@ -28,3 +28,14 @@ textarea {
     background-color: #777;
     border-color: #fff
 }
+    .printButton:hover, #exportButton:hover
+
+{
+    background-color: #f0f0f0; /* Change the background color on hover */
+    color: #000; /* Change the text color on hover */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+}
+
+.th{
+    font-family:'Times New Roman', Times, serif;
+}

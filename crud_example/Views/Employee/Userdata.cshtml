@@ -1,0 +1,48 @@
+﻿@model IEnumerable<crud_example.Models.EmpModel>
+
+<style>
+    thead {
+        background-color: yellow;
+        color: black
+    }
+
+    table {
+        border: 1px solid black;
+    }
+
+    td {
+        padding: 5px;
+        font-size: 14px;
+    }
+</style>
+
+<table class="table table-bordered table-striped" border="1" style="border-color:black">
+    <thead>
+        <tr>
+            
+            <th>Username</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>CityName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                
+                <td>@item.Username</td>
+                <td>@item.Password</td>
+                <td>@item.Email</td>
+                <td>@item.DOB</td>
+                <td>@item.Gender</td>
+                <td>@item.CityName</td>
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+

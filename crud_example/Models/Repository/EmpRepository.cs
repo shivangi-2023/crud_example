@@ -7,6 +7,7 @@ using crud_example.Models;
 using Dapper;
 using System.Linq;
 using System.Configuration.Provider;
+using System.Drawing;
 
 namespace crud_example.Models.Repository
 {
@@ -121,5 +122,9 @@ namespace crud_example.Models.Repository
             con.Close();
             return city.ToList();
         }
+
     }
+   
+
+    
 }

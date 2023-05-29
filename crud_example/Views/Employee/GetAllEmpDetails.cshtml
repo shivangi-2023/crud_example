@@ -3,9 +3,47 @@
 <p>
     @Html.ActionLink("Add User", "AddEmployee")
 </p>
+<hr />
+
+<h1 style=" color:navy; font-size:23px; text-align-last:center">Welcome to My Web Application Form!!!!</h1>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-group">
+    <div class="col-md-12 text-center" style="width:300px">
+        @Html.TextBox("searchText", null, new { @class = "form-control", style = "width: 700px; height: auto; ", placeholder = " search text" });
+
+    </div>
+    <div class="col-md-4">
+        <input type="submit" value="Search" class="btn btn-primary " />
+        <i class="fas fa-search"></i>
+    </div>
+
+
+</div>
+<button onclick="location.href='@Url.Action("PrintPDF", "Employee")';return true;" class="btn btn-primary" style="width:135px;" >&#128438;</button>
+<button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")';return false;" class="btn btn-primary"  style="width:138px;">&#128190;</button>
+<style>
+    thead {
+        background-color: yellow;
+        color: black
+    }
+
+    table {
+        border: 1px solid black;
+    }
+
+    td {
+        padding: 5px;
+        font-size: 14px;
+    }
+    th {
+        padding: 5px;
+        font-size: 14px;
+    }
+  
+</style>
 <table class="table">
     <tr>
-        <th style="background-color: lightgray;, border: 1px solid black;">
+        <th style="background-color: lightgray;, border: 6px solid black;">
             <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.Username)
             </span>
@@ -30,43 +68,45 @@
                 @Html.DisplayNameFor(model => model.Gender)
             </span>
         </th>
-        <th  style="background-color: lightgray;">
+        <th style="background-color: lightgray;">
             <span style="color: midnightblue;">
                 @Html.DisplayNameFor(model => model.CityName)
             </span>
         </th>
-        
-        <th></th>
+
+        <th  style="background-color: lightgray;">
+            
+        </th>
     </tr>
     @foreach (var item in Model)
     {
         @Html.HiddenFor(model => item.Userid)
-<tr style="background-color: lightblue;">
-    <td>
-        @Html.DisplayFor(modelItem => item.Username)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Password)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Email)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.DOB)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Gender)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.CityName)
-    </td>
+        <tr style="background-color: lightblue;">
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CityName)
+            </td>
 
 
-    <td style="background-color:white">
-        @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }, new { style = "color: blue; font-weight: bold;" }) &nbsp;&nbsp;&nbsp;|
-        @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
-    </td>
-</tr>
+            <td style="background-color: lightblue;" >
+                @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }, new { style = "color: blue; font-weight: bold;" }) &nbsp;&nbsp;&nbsp;|
+                @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
+            </td>
+        </tr>
     }
 </table>
 
