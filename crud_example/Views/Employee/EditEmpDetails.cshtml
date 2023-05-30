@@ -10,6 +10,10 @@
         @Html.ActionLink("Back to Details", "GetAllEmpDetails")
     </div>
     <hr />
+    if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
     <div class="container" style="border: 4px solid green; width: 350px; height: 500px; background-color: lightseagreen; ">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Userid)
@@ -47,11 +51,11 @@
             <br /><br />
             @*//@Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })*@
             <div class="col-md-4">
-             @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })
-            <br />
-               <label class=" = radio-inline">
-                  @Html.RadioButtonFor(model => model.Gender, "Male", new { @name = "gender", @class = "custom-radio" })<span style="color: white;">
-                       Male
+                @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2", style = "color: white;" })
+                <br />
+                <label class=" = radio-inline">
+                    @Html.RadioButtonFor(model => model.Gender, "Male", new { @name = "gender", @class = "custom-radio" })<span style="color: white;">
+                        Male
                 </label><br />
                 <label class=" = radio-inline">
                     @Html.RadioButtonFor(model => model.Gender, "Female", new { @name = "gender", @class = "custom-radio" })<span style="color: white;">
@@ -63,14 +67,15 @@
             </div>
         </div>
         @*<div class="form-group">
-            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-3", style = "color: white;" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Gender, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-3", style = "color: white;" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Gender, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
         <br /><br />
-        <div class="col-md-10"><br />
+        <div class="col-md-10">
+            <br />
             @Html.Label("City", htmlAttributes: new { @class = "control-label col-md-3", style = "color: white;" })
             <br />
             @Html.DropDownList("CityId", new SelectList(ViewData["CityList"] as List<crud_example.Models.City>, "CityId", "CityName"), "-- Select City Name --", new { @class = "Search" })
@@ -80,13 +85,23 @@
 
 
         <div class="form-group">
-            <div class=" col-md-12">
+            <div class=" col-md-10">
                 <br />
-                <input type="submit" value="Update" class="btn btn-primary btn btn-primary btn-block btn-block custom-button" />
+                <button onclick="showmessage('Record Updated successfully...')" class="btn btn-primary btn-block custom-button">Update</button>
+
+                @*//<input type="submit" value="Update" class="btn btn-primary btn btn-primary btn-block btn-block custom-button" />*@
             </div>
         </div>
     </div>
-        }
-        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-        <script src="~/Scripts/jquery.validate.min.js"></script>
-        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // Function to display the message
+    function showMessage(message) {
+        alert(message);
+    }
+</script>

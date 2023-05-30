@@ -4,27 +4,31 @@
     @Html.ActionLink("Add User", "AddEmployee")
 </p>
 <hr />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
 
-<h1 style=" color:navy; font-size:23px; text-align-last:center">Welcome to My Web Application Form!!!!</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+<h1 style="color: navy; font-size: 23px; text-align-last: center">Welcome to My Web Application Form!!!!</h1>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="form-group">
-    <div class="col-md-12 text-center" style="width:300px">
-        @Html.TextBox("searchText", null, new { @class = "form-control", style = "width: 700px; height: auto; ", placeholder = " search text" });
-
+    <div class="col-md-12 text-center" style="width: 300px">
+        @Html.TextBox("searchText", null, new { @class = "form-control", style = "width: 700px; height: auto;", placeholder = " search text" })
     </div>
     <div class="col-md-4">
-        <input type="submit" value="Search" class="btn btn-primary " />
+        <input type="submit" value="Search" class="btn btn-primary" />
         <i class="fas fa-search"></i>
     </div>
-
-
 </div>
-<button onclick="location.href='@Url.Action("PrintPDF", "Employee")';return true;" class="btn btn-primary" style="width:135px;" >&#128438;</button>
-<button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")';return false;" class="btn btn-primary"  style="width:138px;">&#128190;</button>
+<button onclick="location.href='@Url.Action("PrintPDF", "Employee")';return true;" class="btn btn-primary btn-sm" style="width:50px"; >&#128438;</button>
+<button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")';return false;" class="btn btn-primary btn-sm" style="width:50px";>&#128190;</button>
+<br />
+<br />
 <style>
     thead {
         background-color: yellow;
-        color: black
+        color: black;
     }
 
     table {
@@ -34,54 +38,69 @@
     td {
         padding: 5px;
         font-size: 14px;
+        border: 1px solid #87868b;
     }
+
     th {
         padding: 5px;
-        font-size: 14px;
+        \ font-size: 14px;
+        border: 1px solid black;
+        background-color: lightgray;
     }
-  
 </style>
 <table class="table">
     <tr>
-        <th style="background-color: lightgray;, border: 6px solid black;">
+        <th>
+            <span style="color: midnightblue">
+                Sr. No.
+            </span>
+        </th>
+        <th>
             <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.Username)
             </span>
         </th>
-        <th style="background-color: lightgray;">
-            <span style="color: midnightblue;">
+        <th>
+            <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.Password)
             </span>
         </th>
-        <th style="background-color: lightgray;">
-            <span style="color: midnightblue;">
+        <th>
+            <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.Email)
             </span>
         </th>
-        <th style="background-color: lightgray;">
-            <span style="color: midnightblue;">
+        <th>
+            <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.DOB)
             </span>
         </th>
-        <th style="background-color: lightgray;">
-            <span style="color: midnightblue;">
+        <th>
+            <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.Gender)
             </span>
         </th>
-        <th style="background-color: lightgray;">
-            <span style="color: midnightblue;">
+        <th>
+            <span style="color: midnightblue">
                 @Html.DisplayNameFor(model => model.CityName)
             </span>
         </th>
-
-        <th  style="background-color: lightgray;">
-            
+        <th>
+            <span style="color: midnightblue">
+                <p>Actions</p>
+            </span>
         </th>
     </tr>
+    @{
+        var serialNumber = 1;
+    }
     @foreach (var item in Model)
     {
         @Html.HiddenFor(model => item.Userid)
-        <tr style="background-color: lightblue;">
+        <tr style="background-color: ghostwhite;">
+            <td>
+                @serialNumber
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
@@ -100,15 +119,24 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CityName)
             </td>
+            <td style="background-color: white;">
+                <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" font-weight: bold;">
+                    <i class="fas fa-edit"></i> <!-- Edit Icon -->
+                </button>
+                
+                <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-trash"></i> <!-- Delete Icon -->
+                </button>
 
-
-            <td style="background-color: lightblue;" >
-                @Html.ActionLink("Edit", "EditEmpDetails", new { id = item.Userid }, new { style = "color: blue; font-weight: bold;" }) &nbsp;&nbsp;&nbsp;|
-                @Html.ActionLink("Delete", "DeleteEmp", new { id = item.Userid }, new { onclick = "return confirm('Are You sure do you wants to delete?');" })
+               
             </td>
         </tr>
+        serialNumber++;
     }
 </table>
-
-
-
+<script>
+    // Function to display the message
+    function showMessage(message) {
+        alert(message);
+    }
+</script>

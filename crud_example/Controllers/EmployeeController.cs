@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Rotativa;
 using OfficeOpenXml;
 using System.Linq;
+using PagedList;
+using System;
 
 namespace crud_example.Controllers
 {
@@ -42,10 +44,12 @@ namespace crud_example.Controllers
                     ViewData["CityList"] = EmpRepo.GetCities();
                     EmpRepo.AddEmployee(Emp);
                     ViewBag.Message = "Records added successfully.";
+                    //ViewBag.SuccessMessage = TempData["SuccesMeassge"];
+
+                    //ViewBag.Message = "Records added successfully.";
                     ModelState.Clear();
-                    //TempData["SuccessMessage"] = "Records added successfully.";
                     return View();
-                }
+                }   
                 return View();
             }
             catch
@@ -73,7 +77,9 @@ namespace crud_example.Controllers
                     ViewData["CityList"] = EmpRepo.GetCities();
 
                     EmpRepo.UpdateEmployee(obj);
-                    return RedirectToAction("GetAllEmpDetails");
+                    TempData["SuccessMessage"] = "Records Updated successfully.";
+
+                    return RedirectToAction("EditEmpDetails");
                 }
                 else
                 {
@@ -94,8 +100,8 @@ namespace crud_example.Controllers
                 EmpRepository EmpRepo = new EmpRepository();
                 if (EmpRepo.DeleteEmployee(id))
                 {
-                    ViewBag.Message = "Employee details deleted successfully";
-                    //ViewBag.AlertMsg = "Employee details deleted successfully";
+                    TempData["SuccessMessage"] = "Records Deleted successfully.";
+
                 }
                 return RedirectToAction("GetAllEmpDetails");
             }
@@ -105,17 +111,28 @@ namespace crud_example.Controllers
             }
         }
 
+       
         public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();
 
-            return new PartialViewAsPdf("Userdata", employees)
+            var pdf = new ViewAsPdf("Userdata", employees)
             {
-                FileName = "GetUserdetails.pdf"
+                FileName = "GetUserdetails.pdf",
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageSize = Rotativa.Options.Size.A4
             };
+
+            // Set the custom options for prompting the user to print
+            pdf.CustomSwitches = "--print-media-type --header-html \"\" --footer-html \"\"";
+
+            // Show the PDF in the browser
+            return pdf;
         }
-        
+
+
+
         public void ExportListUsingEPPlus()
         {
             EmpRepository EmpRepo = new EmpRepository();
