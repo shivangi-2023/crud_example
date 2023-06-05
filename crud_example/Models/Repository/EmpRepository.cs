@@ -69,15 +69,15 @@ namespace crud_example.Models.Repository
 
         }
         //view users details
-        public EmpModel GetById(int id)
+        public EmpModel GetEmployeeDetails(int id)
         {
             try
             {
                 DynamicParameters pram = new DynamicParameters();
-                pram.Add("@Userid", id);
+                pram.Add("@Id", id);
                 connection();
-                
-                var employee = SqlMapper.Query<EmpModel>(con, "GetEmployees", pram, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                var employee = SqlMapper.Query<EmpModel>(con, "GetDetails", pram, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 con.Close();
                 return employee;
@@ -88,24 +88,8 @@ namespace crud_example.Models.Repository
             }
         }
 
-        //public EmpModel getById(int id)
-        //{
-        //    try
-        //    {
 
-        //        DynamicParameters param = new DynamicParameters();
-        //        param.Add("@Userid", id);
-        //        connection();
-        //        var employee = SqlMapper.Query<EmpModel>(con, "GetEmployees", param, commandType: CommandType.StoredProcedure).FirstOrDefault();
-        //        con.Close();
-        //        return employee;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+    
 
         //To Update Employee details
         public void UpdateEmployee(EmpModel empModel)

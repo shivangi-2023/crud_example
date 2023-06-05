@@ -12,9 +12,7 @@ namespace crud_example.Controllers
 {
 
     public class EmployeeController : Controller
-    {
-
-        // GET: Employee/GetAllEmpDetails
+    {        
         public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -24,35 +22,38 @@ namespace crud_example.Controllers
 
 
             ViewBag.SortingUsername = String.IsNullOrEmpty(Sorting_Order) ? "Username" : "";
-            ViewBag.SortingPassword = String.IsNullOrEmpty(Sorting_Order) ? "Password" : "";
             ViewBag.SortingEmail = String.IsNullOrEmpty(Sorting_Order) ? "Email" : "";
-            ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
             ViewBag.SortingDOB = String.IsNullOrEmpty(Sorting_Order) ? "DOB" : "";
-
-
-
+            ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
+            ViewBag.SortingCityName = String.IsNullOrEmpty(Sorting_Order) ? "CityName" : "";
             if (!String.IsNullOrEmpty(searchString))
             {
-                employees = employees.Where(e => e.Username.Contains(searchString) || e.Password.Contains(searchString)).ToList();
+                string lowerSearchString = searchString.ToLower(); // Convert the search string to lowercase
+                employees = employees.Where(e =>
+                    e.Username.ToLower().StartsWith(lowerSearchString) || // Check if the username starts with the search string
+                    e.Email.ToLower().StartsWith(lowerSearchString)|| // Check if the email starts with the search string
+                      e.CityName.ToLower().StartsWith(lowerSearchString) || // Check if the city name starts with the search string
+                      e.Gender.ToLower().StartsWith(lowerSearchString) 
+                    ).ToList();
             }
-
+                       
             switch (Sorting_Order)
             {
                 case "Username":
                     employees = employees.OrderByDescending(e => e.Username).ToList();
                     break;
-                case "Password":
-                    employees = employees.OrderByDescending(e => e.Password).ToList();
-                    break;
-
                 case "Email":
                     employees = employees.OrderByDescending(e => e.Email).ToList();
+                    break;
+
+                case "DOB":
+                    employees = employees.OrderByDescending(e => e.DOB).ToList();
                     break;
                 case "Gender":
                     employees = employees.OrderByDescending(e => e.Gender).ToList();
                     break;
-                case "DOB":
-                    employees = employees.OrderBy(e => e.DOB).ToList();
+                case "CityName":
+                    employees = employees.OrderBy(e => e.CityName).ToList();
                     break;
                 default:
                     employees = employees.OrderBy(e => e.Username).ToList();
@@ -61,20 +62,25 @@ namespace crud_example.Controllers
             }
             return View(employees);
         }
-        //public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
-        //{
-        //    EmpRepository EmpRepo = new EmpRepository();
-        //    return View(EmpRepo.GetAllEmployees());
 
-        //}
+
+  
+
         public ActionResult Details(int id)
         {
-            EmpRepository EmpRepo = new EmpRepository();
-            EmpModel Emp = EmpRepo.GetById(id);
-            return View(Emp);
+            try
+            {
+                EmpRepository EmpRepo = new EmpRepository();
+                EmpModel Emp = EmpRepo.GetEmployeeDetails(id);
+                return View("Details", Emp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        // GET: Employee/AddEmployee
+        //GET: Employee/AddEmployee
         public ActionResult AddEmployee()
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -112,10 +118,11 @@ namespace crud_example.Controllers
             ViewData["CityList"] = EmpRepo.GetCities();
 
             return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Userid == id));
+           
         }
         // POST:Update the details into database
         [HttpPost]
-        public ActionResult EditEmpDetails(int id, EmpModel obj)
+        public ActionResult EditEmpDetails( EmpModel obj)
         {
             try
             {
@@ -216,45 +223,5 @@ namespace crud_example.Controllers
         }
     }
 }
-//        public ActionResult Index(string Sorting_Order, string Search_Data)
-//        {
-//            ViewBag.SortingName = String.IsNullOrEmpty(Sorting_Order) ? "Name_Description" : "";
-//            ViewBag.SortingDate = Sorting_Order == "Date_Enroll" ? "Date_Description" : "Date";
-
-//            var userdata = from user in db.User_Info select user;
-
-//            if (!string.IsNullOrEmpty(Search_Data))
-//            {
-//                userdata = userdata.Where(user =>
-
-//                    user.UserName.ToUpper().Contains(Search_Data.ToUpper()) ||
-//                    user.Password.ToUpper().Contains(Search_Data.ToUpper()) ||
-//                    user.Email.ToUpper().Contains(Search_Data.ToUpper()));
-//            }
-
-//            switch (Sorting_Order)
-//            {
-//                case "Name_Description":
-//                    userdata = userdata.OrderByDescending(user => user.Username);
-//                    break;
-//                case "Date_Enroll":
-//                    userdata = userdata.OrderBy(user => user.Password);
-//                    break;
-//                case "Date_Description":
-//                    userdata = userdata.OrderByDescending(user => user.Email);
-//                    break;
-//                default:
-//                    userdata = userdata.OrderBy(user => user.Username);
-//                    break;
-//            }
-
-//            return View(userdata.ToList());
-//        }
-
-
-//    }
-//}
-
-
 
 
