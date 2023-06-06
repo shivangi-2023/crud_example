@@ -55,7 +55,7 @@ namespace crud_example.Models.Repository
             {
                 connection();
                 con.Open();
-                
+
                 IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "GetEmployees").ToList();
                 con.Close();
                 return emp.ToList();
@@ -88,8 +88,24 @@ namespace crud_example.Models.Repository
             }
         }
 
+        public List<EmpModel> GetDeletedEmployees()
+        {
+            try
+            {
 
-    
+                connection();
+                con.Open();
+                IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "GetDeletedEmployees").ToList();
+                con.Close();
+                return EmpList.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
         //To Update Employee details
         public void UpdateEmployee(EmpModel empModel)
@@ -137,15 +153,46 @@ namespace crud_example.Models.Repository
         {
             connection();
             con.Open();
-            
+
             IList<City> city = SqlMapper.Query<City>(con, "GetAllCity").ToList();
 
             con.Close();
             return city.ToList();
         }
+        public void RestoreDeletedEmployee(int Id)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                param.Add("@UserId", Id);
+                connection();
+                con.Open();
+                con.Execute("RestoreDeletedEmpById", param, commandType: CommandType.StoredProcedure);
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                //Log error as per your need 
+                throw ex;
+            }
+        }
+        //    public List<EmpModel> SoftDelete()
+        //    {
+        //        try
+        //        {
+        //            connection();
+        //            con.Open();
+        //            IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "sp_softdelete").ToList();
+        //            con.Close();
+        //            return emp.ToList();
+        //        }
+        //        catch (Exception)
+        //        {
+        //            throw;
+        //        }
 
+        //    }
+
+        //}
     }
-   
-
-    
 }

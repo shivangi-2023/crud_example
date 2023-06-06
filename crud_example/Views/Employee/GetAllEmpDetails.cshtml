@@ -1,4 +1,6 @@
-﻿@model IEnumerable<crud_example.Models.EmpModel>
+﻿@model IPagedList<crud_example.Models.EmpModel>
+@using PagedList.Mvc;
+@using PagedList;
 
 <p>
     <a href="@Url.Action("AddEmployee")" class="btn btn-info">Create New</a>
@@ -17,29 +19,20 @@
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 <div class="form-group">
-    @*<div class="col-md-12 text-center" style="width: 300px">
-        @Html.TextBox("searchText", null, new { @class = "form-control", style = "width: 700px; height: auto;", placeholder = " search text....." })
-    </div>*@
     @using (Html.BeginForm())
     {
         <p>
             Search: @Html.TextBox("searchString", ViewBag.FilterValue as string)
-
-            <input type="submit" value="Find" class="btn btn-info btn-sm" style="text-align: right" placeholder="Search your text here" />
+            <input type="submit" value="Find" class="btn btn-info btn-sm" style="text-align: right" />
         </p>
-
     }
+    <button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
+        <span style="font-size: 16px;">&#128438;</span>
+    </button>
+    <button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")'; return false;" class="btn btn-dark btn-sm" style="width: 40px;">
+        <span style="font-size: 16px;">&#128190;</span>
+    </button>
 </div>
-
-<button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
-    <span style="font-size: 20px;">&#128438;</span>
-</button>
-<button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")'; return false;" class="btn btn-dark btn-sm" style="width: 40px;">
-    <span style="font-size: 20px;">&#128190;</span>
-</button>
-
-<br />
-<br />
 
 <style>
     thead {
@@ -74,32 +67,32 @@
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.First().Username)
             </span>
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.Password)
+                @Html.DisplayNameFor(model => model.First().Password)
             </span>
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.First().Email)
             </span>
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.DOB)
+                @Html.DisplayNameFor(model => model.First().DOB)
             </span>
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.Gender)
+                @Html.DisplayNameFor(model => model.First().Gender)
             </span>
         </th>
         <th>
             <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.CityName)
+                @Html.DisplayNameFor(model => model.First().CityName)
             </span>
         </th>
         <th>
@@ -108,7 +101,7 @@
     </tr>
 
     @{
-        var serialNumber = 1;
+        var serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
     }
 
     @foreach (var item in Model)
@@ -153,6 +146,12 @@
         serialNumber++;
     }
 </table>
+
+<div class="text-center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
+</div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/bootstrap-icons.min.css">

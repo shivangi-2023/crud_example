@@ -7,64 +7,213 @@ using OfficeOpenXml;
 using System.Linq;
 using PagedList;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
+using PagedList.Mvc;
 
 namespace crud_example.Controllers
 {
 
     public class EmployeeController : Controller
-    {        
-        public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
+    {
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, int page = 1)
         {
-            EmpRepository EmpRepo = new EmpRepository();
-            var employees = EmpRepo.GetAllEmployees();
-            ViewBag.TotalPages = Math.Ceiling(employees.Count() / 10.0);
-            employees = employees.Skip((Page - 1) * 10).Take(10).ToList();
+                EmpRepository EmpRepo = new EmpRepository();
+                var employees = EmpRepo.GetAllEmployees();
 
-
-            ViewBag.SortingUsername = String.IsNullOrEmpty(Sorting_Order) ? "Username" : "";
-            ViewBag.SortingEmail = String.IsNullOrEmpty(Sorting_Order) ? "Email" : "";
-            ViewBag.SortingDOB = String.IsNullOrEmpty(Sorting_Order) ? "DOB" : "";
-            ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
-            ViewBag.SortingCityName = String.IsNullOrEmpty(Sorting_Order) ? "CityName" : "";
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                string lowerSearchString = searchString.ToLower(); // Convert the search string to lowercase
-                employees = employees.Where(e =>
-                    e.Username.ToLower().StartsWith(lowerSearchString) || // Check if the username starts with the search string
-                    e.Email.ToLower().StartsWith(lowerSearchString)|| // Check if the email starts with the search string
-                      e.CityName.ToLower().StartsWith(lowerSearchString) || // Check if the city name starts with the search string
-                      e.Gender.ToLower().StartsWith(lowerSearchString) 
+                // Apply search filter if a search string is provided
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    string lowerSearchString = searchString.ToLower();
+                    employees = employees.Where(e =>
+                        e.Username.ToLower().StartsWith(lowerSearchString) ||
+                        e.Email.ToLower().StartsWith(lowerSearchString) ||
+                        e.Gender.ToLower().StartsWith(lowerSearchString)
                     ).ToList();
-            }
-                       
-            switch (Sorting_Order)
-            {
-                case "Username":
-                    employees = employees.OrderByDescending(e => e.Username).ToList();
-                    break;
-                case "Email":
-                    employees = employees.OrderByDescending(e => e.Email).ToList();
-                    break;
+                }
 
-                case "DOB":
-                    employees = employees.OrderByDescending(e => e.DOB).ToList();
-                    break;
-                case "Gender":
-                    employees = employees.OrderByDescending(e => e.Gender).ToList();
-                    break;
-                case "CityName":
-                    employees = employees.OrderBy(e => e.CityName).ToList();
-                    break;
-                default:
-                    employees = employees.OrderBy(e => e.Username).ToList();
-                    break;
+                // Apply sorting order
+                switch (sortingOrder)
+                {
+                    case "Username":
+                        employees = employees.OrderBy(e => e.Username).ToList();
+                        break;
+                    case "Email":
+                        employees = employees.OrderBy(e => e.Email).ToList();
+                        break;
+                    case "DOB":
+                        employees = employees.OrderBy(e => e.DOB).ToList();
+                        break;
+                    case "Gender":
+                        employees = employees.OrderBy(e => e.Gender).ToList();
+                        break;
+                    case "CityName":
+                        employees = employees.OrderBy(e => e.CityName).ToList();
+                        break;
+                    default:
+                        employees = employees.OrderBy(e => e.Username).ToList();
+                        break;
+                }
 
-            }
-            return View(employees);
+                int pageSize = 5;
+                int pageNumber = page;
+                ViewBag.FilterValue = searchString;
+
+            return View(employees.ToPagedList(pageNumber, pageSize));
         }
 
+        //public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
+        //{
+        //    EmpRepository EmpRepo = new EmpRepository();
+        //    var employees = EmpRepo.GetAllEmployees();
+        //    ViewBag.TotalPages = Math.Ceiling(employees.Count() / 10.0);
+        //    employees = employees.Skip((Page - 1) * 10).Take(10).ToList();
+        //    ViewBag.SortingUsername = String.IsNullOrEmpty(Sorting_Order) ? "Username" : "";
+        //    ViewBag.SortingEmail = String.IsNullOrEmpty(Sorting_Order) ? "Email" : "";
+        //    ViewBag.SortingDOB = String.IsNullOrEmpty(Sorting_Order) ? "DOB" : "";
+        //    ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
+        //    ViewBag.SortingCityName = String.IsNullOrEmpty(Sorting_Order) ? "CityName" : "";
+        //    if (!String.IsNullOrEmpty(searchString))
+        //    {
+        //        string lowerSearchString = searchString.ToLower();
+        //        employees = employees.Where(e =>
+        //            e.Username.ToLower().StartsWith(lowerSearchString) ||
+        //            e.Email.ToLower().StartsWith(lowerSearchString) ||
+        //            e.Gender.ToLower().StartsWith(lowerSearchString)
+        //        ).ToList();
+        //    }
 
-  
+        //    switch (Sorting_Order)
+        //    {
+        //        case "Username":
+        //            employees = employees.OrderByDescending(e => e.Username).ToList();
+        //            break;
+        //        case "Email":
+        //            employees = employees.OrderByDescending(e => e.Email).ToList();
+        //            break;
+        //        case "DOB":
+        //            employees = employees.OrderByDescending(e => e.DOB).ToList();
+        //            break;
+        //        case "Gender":
+        //            employees = employees.OrderByDescending(e => e.Gender).ToList();
+        //            break;
+        //        case "CityName":
+        //            employees = employees.OrderBy(e => e.CityName).ToList();
+        //            break;
+        //        default:
+        //            employees = employees.OrderBy(e => e.Username).ToList();
+        //            break;
+        //    }
+
+        //    int pageSize = 3;
+        //    int pageNumber = Page;
+        //    IPagedList<crud_example.Models.EmpModel> pagedEmployees = new PagedList<crud_example.Models.EmpModel>(employees, pageNumber, pageSize);
+
+        //    return View(pagedEmployees);
+        //}
+
+        //public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
+        //{
+        //    int PageSize = 5; // Number of records to display per page
+        //    EmpRepository EmpRepo = new EmpRepository();
+        //    var employees = EmpRepo.GetAllEmployees();
+        //    ViewBag.TotalPages = Math.Ceiling(employees.Count() / (double)PageSize);
+
+        //    // Apply search filter
+        //    if (!String.IsNullOrEmpty(searchString))
+        //    {
+        //        string lowerSearchString = searchString.ToLower();
+        //        employees = employees.Where(e =>
+        //            e.Username.ToLower().StartsWith(lowerSearchString) ||
+        //            e.Email.ToLower().StartsWith(lowerSearchString) ||
+        //            e.Gender.ToLower().StartsWith(lowerSearchString)
+        //        ).ToList();
+        //    }
+
+        //    // Apply sorting
+        //    switch (Sorting_Order)
+        //    {
+        //        case "Username":
+        //            employees = employees.OrderByDescending(e => e.Username).ToList();
+        //            break;
+        //        case "Email":
+        //            employees = employees.OrderByDescending(e => e.Email).ToList();
+        //            break;
+        //        case "DOB":
+        //            employees = employees.OrderByDescending(e => e.DOB).ToList();
+        //            break;
+        //        case "Gender":
+        //            employees = employees.OrderByDescending(e => e.Gender).ToList();
+        //            break;
+        //        case "CityName":
+        //            employees = employees.OrderBy(e => e.CityName).ToList();
+        //            break;
+        //        default:
+        //            employees = employees.OrderBy(e => e.Username).ToList();
+        //            break;
+        //    }
+
+        //    // Apply pagination
+        //    employees = employees.Skip((Page - 1) * PageSize).Take(PageSize).ToList();
+
+        //    ViewBag.SortingUsername = String.IsNullOrEmpty(Sorting_Order) ? "Username" : "";
+        //    ViewBag.SortingEmail = String.IsNullOrEmpty(Sorting_Order) ? "Email" : "";
+        //    ViewBag.SortingDOB = String.IsNullOrEmpty(Sorting_Order) ? "DOB" : "";
+        //    ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
+        //    ViewBag.SortingCityName = String.IsNullOrEmpty(Sorting_Order) ? "CityName" : "";
+
+        //    return View(employees);
+        //}
+
+        //public ActionResult GetAllEmpDetails(string Sorting_Order, string searchString, int Page = 1)
+        //{
+        //    EmpRepository EmpRepo = new EmpRepository();
+        //    var employees = EmpRepo.GetAllEmployees();
+        //    ViewBag.TotalPages = Math.Ceiling(employees.Count() / 10.0);
+        //    employees = employees.Skip((Page - 1) * 10).Take(10).ToList();
+        //    ViewBag.SortingUsername = String.IsNullOrEmpty(Sorting_Order) ? "Username" : "";
+        //    ViewBag.SortingEmail = String.IsNullOrEmpty(Sorting_Order) ? "Email" : "";
+        //    ViewBag.SortingDOB = String.IsNullOrEmpty(Sorting_Order) ? "DOB" : "";
+        //    ViewBag.SortingGender = String.IsNullOrEmpty(Sorting_Order) ? "Gender" : "";
+        //    ViewBag.SortingCityName = String.IsNullOrEmpty(Sorting_Order) ? "CityName" : "";
+        //    if (!String.IsNullOrEmpty(searchString))
+        //    {
+        //        string lowerSearchString = searchString.ToLower(); // Convert the search string to lowercase
+        //        employees = employees.Where(e =>
+        //            e.Username.ToLower().StartsWith(lowerSearchString) || // Check if the username starts with the search string
+        //            e.Email.ToLower().StartsWith(lowerSearchString)|| // Check if the email starts with the search string
+        //            e.Gender.ToLower().StartsWith(lowerSearchString) 
+        //            ).ToList();
+        //    }
+
+        //    switch (Sorting_Order)
+        //    {
+        //        case "Username":
+        //            employees = employees.OrderByDescending(e => e.Username).ToList();
+        //            break;
+        //        case "Email":
+        //            employees = employees.OrderByDescending(e => e.Email).ToList();
+        //            break;
+
+        //        case "DOB":
+        //            employees = employees.OrderByDescending(e => e.DOB).ToList();
+        //            break;
+        //        case "Gender":
+        //            employees = employees.OrderByDescending(e => e.Gender).ToList();
+        //            break;
+        //        case "CityName":
+        //            employees = employees.OrderBy(e => e.CityName).ToList();
+        //            break;
+        //        default:
+        //            employees = employees.OrderBy(e => e.Username).ToList();
+        //            break;
+
+        //    }
+        //    return View(employees);
+        //}
+
+
+
 
         public ActionResult Details(int id)
         {
@@ -148,6 +297,8 @@ namespace crud_example.Controllers
             }
         }
         // GET: Delete  Employee details by id
+
+
         public ActionResult DeleteEmp(int id)
         {
             try
@@ -158,6 +309,7 @@ namespace crud_example.Controllers
                     TempData["SuccessMessage"] = "Records Deleted successfully.";
 
                 }
+
                 return RedirectToAction("GetAllEmpDetails");
             }
             catch
@@ -165,6 +317,8 @@ namespace crud_example.Controllers
                 return RedirectToAction("GetAllEmpDetails");
             }
         }
+
+
 
 
         public ActionResult PrintPDF()

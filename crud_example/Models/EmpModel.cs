@@ -36,14 +36,16 @@ namespace crud_example.Models
 
         public String CityName { get; set; }
         //public bool IsDeleted { get; set; }
-        public bool isActive { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public int Status { get; internal set; }
+
+        //public bool isActive { get; set; }
+        //public DateTime? DeletedAt { get; set; }
 
 
     }
-    public interface ICustomSoftDelete
-    {
-        bool isActive { get; set; }
-        DateTime? DeletedAt { get; set; }
-    }
+    //public interface ICustomSoftDelete
+    //{
+    //    bool isActive { get; set; }
+    //    DateTime? DeletedAt { get; set; }
+    //}
 }
