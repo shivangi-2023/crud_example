@@ -1,9 +1,10 @@
 ﻿@model IPagedList<crud_example.Models.EmpModel>
 @using PagedList.Mvc;
 @using PagedList;
+@*PagedList.IPagedList<crud_example.Models.EmpModel>*@
 
 <p>
-    <a href="@Url.Action("AddEmployee")" class="btn btn-info">Create New</a>
+    <a href="@Url.Action("AddEmployee")" class="btn btn-info">Add New</a>
 </p>
 <hr />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
@@ -14,27 +15,53 @@
     <div class="alert alert-success" style="text-align:center">@TempData["SuccessMessage"]</div>
 }
 
-<h1 style="color: navy; font-size: 23px; text-align-last: center">Welcome to My Web Application Form!!!!</h1>
 
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 <div class="form-group">
+    <div class="col-md-12">
+        <div class="col-lg-10">
+            <h3 style="color: black;  border-block-end-color:lightsteelblue; 20px; text-align-last: left">Users</h3>
+
+        </div>
+
+        <button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
+            <span style="font-size: 16px;">&#128438;</span>
+        </button>
+        <button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")'; return false;" class="btn btn-dark btn-sm" style="width: 40px;">
+            <span style="font-size: 16px;">&#128190;</span>
+        </button>
+    </div>
     @using (Html.BeginForm())
+
     {
-        <p>
-            Search: @Html.TextBox("searchString", ViewBag.FilterValue as string)
-            <input type="submit" value="Find" class="btn btn-info btn-sm" style="text-align: right" />
-        </p>
+
+        <div class="col-lg-6">
+            @Html.TextBox("searchString", ViewBag.FilterValue as string, new { @placeholder = "Search", @class = "form-control", @style = "width: 300px;" })
+        </div>
+       <div class="col-xs-2">
+            <select id="Status" class="form-control" name="Status">
+                <option value>Show All</option>
+                <option value="true" selected="selected">Active</option>
+                <option value="false">Inactive</option>
+            </select>
+        </div>
+        <div class="col-xs-2">
+            <input type="submit" value="Find" class="btn btn-info btn-sm" style="text-align: center; width:50px" />
+            <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width:50px" onclick="resetSearch()" />
+            @*@Html.TextBox("searchString", ViewBag.FilterValue as string)*@
+
+        </div>
     }
-    <button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
-        <span style="font-size: 16px;">&#128438;</span>
-    </button>
-    <button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")'; return false;" class="btn btn-dark btn-sm" style="width: 40px;">
-        <span style="font-size: 16px;">&#128190;</span>
-    </button>
+
+
+
 </div>
 
 <style>
+    .black-link {
+        color: black;
+    }
     thead {
         background-color: yellow;
         color: black;
@@ -61,42 +88,47 @@
 <table class="table">
     <tr>
         <th>
-            <span style="color: midnightblue">
+            <span style="color: Black">
                 Sr. No.
             </span>
         </th>
-        <th>
-            <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.First().Username)
+        <th style="color:black">
+            <span style="color: Black">
+                @Html.ActionLink("Username", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue }, new { @class = "black-link" })
+
+                @*@Html.DisplayNameFor(model => model.First().Username)*@
             </span>
         </th>
         <th>
-            <span style="color: midnightblue">
+            <span style="color: Black">
+
                 @Html.DisplayNameFor(model => model.First().Password)
             </span>
         </th>
         <th>
-            <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.First().Email)
-            </span>
+            
+                @Html.ActionLink("Email", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue }, new { @class = "black-link" })
+            
         </th>
         <th>
-            <span style="color: midnightblue">
+            <span style="color: Black">
                 @Html.DisplayNameFor(model => model.First().DOB)
             </span>
         </th>
         <th>
-            <span style="color: midnightblue">
-                @Html.DisplayNameFor(model => model.First().Gender)
+            <span style="color: Black">
+                @Html.ActionLink("Gender", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue },new { @class = "black-link" })
+
+                @*@Html.DisplayNameFor(model => model.First().Gender)*@
             </span>
         </th>
         <th>
-            <span style="color: midnightblue">
+            <span style="color: Black">
                 @Html.DisplayNameFor(model => model.First().CityName)
             </span>
         </th>
         <th>
-            <span style="color: midnightblue; font-weight: bold;">Actions</span>
+            <span style="color: Black; font-weight: bold;">Actions</span>
         </th>
     </tr>
 
@@ -134,12 +166,13 @@
                     <i class="fas fa-edit"></i> <!-- Edit Icon -->
                 </button>
 
-                <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
-                    <i class="fas fa-eye"></i>
-                </button>
 
                 <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
                     <i class="fas fa-trash"></i> <!-- Delete Icon -->
+                </button>
+
+                <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
+                    <i class="fas fa-eye"></i>
                 </button>
             </td>
         </tr>
@@ -147,14 +180,36 @@
     }
 </table>
 
-<div class="text-center">
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-    @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
-</div>
+@*<div class="text-center">
+        Page @(Model.PageCount < Model.PageNumber ? 0: Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, p => Url.Action("GetAllEmpDetails", new { Page = p, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
+    </div>*@
+
+<div class="text-center">
+        @if (Model.PageCount > 0)
+        {
+            <p>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
+            @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
+        }
+        else
+        {
+            <p>No records found.</p>
+        }
+    </div>
+
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/bootstrap-icons.min.css">
+<script>
+    function resetSearch() {
+        var searchInput = document.getElementById('searchString');
+        searchInput.value = '';
+        searchInput.form.submit();
+    }
+</script>
 
 @section scripts {
     <script src="~/Scripts/jquery.validate.min.js"></script>

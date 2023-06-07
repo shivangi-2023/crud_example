@@ -38,6 +38,8 @@ namespace crud_example.Models.Repository
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
                 pram.Add("City", empModel.CityId);
+                pram.Add("@Status", 1);
+
                 connection();
                 con.Open();
                 con.Execute("AddNewEmpDetails", pram, commandType: CommandType.StoredProcedure);
@@ -120,6 +122,8 @@ namespace crud_example.Models.Repository
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
                 pram.Add("city_id", empModel.CityId);
+                pram.Add("@Status", 1);
+
                 connection();
                 con.Open();
                 con.Execute("UpdateEmpDetails", pram, commandType: CommandType.StoredProcedure);
@@ -159,15 +163,15 @@ namespace crud_example.Models.Repository
             con.Close();
             return city.ToList();
         }
-        public void RestoreDeletedEmployee(int Id)
+        public void RestoreDeletedEmployee(int id)
         {
             try
             {
-                DynamicParameters param = new DynamicParameters();
-                param.Add("@UserId", Id);
+                DynamicParameters pram = new DynamicParameters();
+                pram.Add("Userid", id);
                 connection();
                 con.Open();
-                con.Execute("RestoreDeletedEmpById", param, commandType: CommandType.StoredProcedure);
+                con.Execute("RestoreDeletedEmpById", pram, commandType: CommandType.StoredProcedure);
                 con.Close();
             }
             catch (Exception ex)
@@ -176,23 +180,5 @@ namespace crud_example.Models.Repository
                 throw ex;
             }
         }
-        //    public List<EmpModel> SoftDelete()
-        //    {
-        //        try
-        //        {
-        //            connection();
-        //            con.Open();
-        //            IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "sp_softdelete").ToList();
-        //            con.Close();
-        //            return emp.ToList();
-        //        }
-        //        catch (Exception)
-        //        {
-        //            throw;
-        //        }
-
-        //    }
-
-        //}
     }
 }

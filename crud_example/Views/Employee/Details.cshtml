@@ -1,71 +1,90 @@
 ﻿@model crud_example.Models.EmpModel
 
 <div>
-    <h4>EmpModel</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Userid)
-        </dt>
+    <style>
+        table {
+            border: 1px solid #87868b;
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.Userid)
-        </dd>
+        td {
+            width: 40px;
+            padding: 5px;
+            border: 1px solid #87868b;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
+        th {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #87868b;
+        }
+    </style>
+    <div class="title-heading" style="background-color:deepskyblue; font-size:26px;">&nbsp; &nbsp;View User</div>
+    <table class="table">
+        <tbody>
+            <tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
+                <th>
+                    @Html.DisplayNameFor(model => model.Userid)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Userid)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Username)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Password)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DOB)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.DOB)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Gender)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CityName)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.CityName)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+         
+             
+    <p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
+        <a href="@Url.Action("GetAllEmpDetails")" class="btn btn-info">Back to Details</a>
 
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DOB)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DOB)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-
-      
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CityName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CityName)
-        </dd>
-
-    </dl>
-</div>
-<p>
-   
-    <a href="@Url.Action("GetAllEmpDetails")" class="btn btn-info">Back to Details</a>
-  
-</p>
+    </p>

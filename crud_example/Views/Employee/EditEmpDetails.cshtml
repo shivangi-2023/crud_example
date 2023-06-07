@@ -3,7 +3,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <h4>Update User Details</h4>
+    <h3>Edit User </h3>
     <hr />
 
     <div>
@@ -14,6 +14,7 @@
     {
         <div class="alert alert-success" style="text-align:center">@TempData["SuccessMessage"]</div>
     }
+    
     <div class="container" style="border: 4px solid green; width: 350px; height: 500px; background-color: lightseagreen; ">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Userid)
@@ -92,7 +93,7 @@
                 @*//<input type="submit" value="Update" class="btn btn-primary btn btn-primary btn-block btn-block custom-button" />*@
             </div>
         </div>
-    </div>
+   </div>
 }
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
