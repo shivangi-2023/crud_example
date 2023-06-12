@@ -18,7 +18,7 @@ namespace crud_example.Models.Repository
         private void connection()
 
         {
-            string constr = @"Data Source=DESKTOP-6BQAM4C;Initial Catalog=Userdetails_skills;Persist Security Info=True;User ID=sa;Password=123";
+            string constr = @"Data Source=192.168.0.121;Initial Catalog=Userdetails_skills;Persist Security Info=True;User ID=sa;Password=123";
 
             //string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
             con = new SqlConnection(constr);
@@ -38,11 +38,11 @@ namespace crud_example.Models.Repository
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
                 pram.Add("City", empModel.CityId);
-                pram.Add("@Status", 1);
-
                 connection();
                 con.Open();
                 con.Execute("AddNewEmpDetails", pram, commandType: CommandType.StoredProcedure);
+
+                
                 con.Close();
 
             }
@@ -90,22 +90,7 @@ namespace crud_example.Models.Repository
             }
         }
 
-        public List<EmpModel> GetDeletedEmployees()
-        {
-            try
-            {
-
-                connection();
-                con.Open();
-                IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "GetDeletedEmployees").ToList();
-                con.Close();
-                return EmpList.ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+       
 
 
 
@@ -122,7 +107,6 @@ namespace crud_example.Models.Repository
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
                 pram.Add("city_id", empModel.CityId);
-                pram.Add("@Status", 1);
 
                 connection();
                 con.Open();
@@ -154,7 +138,7 @@ namespace crud_example.Models.Repository
             }
         }
         public IEnumerable<City> GetCities()
-        {
+        {   
             connection();
             con.Open();
 
@@ -163,22 +147,24 @@ namespace crud_example.Models.Repository
             con.Close();
             return city.ToList();
         }
-        public void RestoreDeletedEmployee(int id)
-        {
-            try
-            {
-                DynamicParameters pram = new DynamicParameters();
-                pram.Add("Userid", id);
-                connection();
-                con.Open();
-                con.Execute("RestoreDeletedEmpById", pram, commandType: CommandType.StoredProcedure);
-                con.Close();
-            }
-            catch (Exception ex)
-            {
-                //Log error as per your need 
-                throw ex;
-            }
-        }
+
+        
+        //public void RestoreDeletedEmployee(int id)
+        //{
+        //    try
+        //    {
+        //        DynamicParameters pram = new DynamicParameters();
+        //        pram.Add("Userid", id);
+        //        connection();
+        //        con.Open();
+        //        con.Execute("RestoreDeletedEmpById", pram, commandType: CommandType.StoredProcedure);
+        //        con.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //Log error as per your need 
+        //        throw ex;
+        //    }
+        //}
     }
 }

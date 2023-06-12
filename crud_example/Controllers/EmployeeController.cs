@@ -14,7 +14,13 @@ using System.Web.UI;
 
 namespace crud_example.Controllers
 {
+    using Antlr.Runtime.Misc;
+    using Dapper;
     using PagedList;
+    using System.Drawing;
+    using System.Drawing.Printing;
+    using System.Xml.Linq;
+
     public class EmployeeController : Controller
     {
 
@@ -75,14 +81,33 @@ namespace crud_example.Controllers
 
             int pageSize = 8;
             int pageNumber = (page ?? 1);
-            //ViewBag.FilterValue = searchString;
+
+            //selction for deleted rec item
+
+            ViewBag.StatusList = new SelectList(new[]
+            {
+                 new SelectListItem { Text = "Active", Value = "1" },
+                 new SelectListItem { Text = "Inactive", Value = "0" }
+            },
+            "Value", "Text", status);
+
             return View(employees.ToPagedList(pageNumber, pageSize));
 
 
         }
-            
 
-                public ActionResult Details(int id)
+        [HttpPost]
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
+        {
+
+            ViewData["status"]= status;
+            return View();
+
+
+        }
+
+
+        public ActionResult Details(int id)
         {
             try
             {
@@ -132,6 +157,7 @@ namespace crud_example.Controllers
         {
             EmpRepository EmpRepo = new EmpRepository();
             ViewData["CityList"] = EmpRepo.GetCities();
+            ModelState.Clear();
 
             return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Userid == id));
            
@@ -185,42 +211,63 @@ namespace crud_example.Controllers
             }
         }
 
-        public ActionResult RestoredEmp()
-        {
-            try
-            {
-                EmpRepository EmpRepo = new EmpRepository();
-                // Get the employee details
-                var employee = EmpRepo.GetDeletedEmployees();
+    
 
-                if (employee == null)
-                {
-                    ViewBag.ErrorMsg = "No deleted record found";
-                    return RedirectToAction("GetAllEmpDetails");
-                }
+        //public List<EmployeeModel> SoftDelete()
+        //{
+        //    try
+        //    {
+        //        connection();
+        //        con.Open();
+        //        IList<EmployeeModel> emp = SqlMapper.Query<EmployeeModel>(con, "sp_softdelete").ToList();
+        //        con.Close();
+        //        return emp.ToList();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+
+        //}
 
 
-                return View(employee);
-            }
-            catch
-            {
-                return RedirectToAction("GetAllEmpDetails");
-            }
-        }
 
-        public ActionResult Restore(int Id)
-        {
-            try
-            {
-                EmpRepository objRepo = new EmpRepository();
-                objRepo.RestoreDeletedEmployee(Id);
-                return RedirectToAction("GetAllEmpDetails");
-            }
-            catch
-            {
-                return RedirectToAction("GetAllEmpDetails");
-            }
-        }
+        //public ActionResult RestoredEmp()
+        //{
+        //    try
+        //    {
+        //        EmpRepository EmpRepo = new EmpRepository();
+        //        // Get the employee details
+        //        var employee = EmpRepo.GetDeletedEmployees();
+
+        //        if (employee == null)
+        //        {
+        //            ViewBag.ErrorMsg = "No deleted record found";
+        //            return RedirectToAction("GetAllEmpDetails");
+        //        }
+
+
+        //        return View(employee);
+        //    }
+        //    catch
+        //    {
+        //        return RedirectToAction("GetAllEmpDetails");
+        //    }
+        //}
+
+        //public ActionResult Restore(int id)
+        //{
+        //    try
+        //    {
+        //        EmpRepository objRepo = new EmpRepository();
+        //        objRepo.RestoreDeletedEmployee(id);
+        //        return RedirectToAction("GetAllEmpDetails");
+        //    }
+        //    catch
+        //    {
+        //        return RedirectToAction("GetAllEmpDetails");
+        //    }
+        //}
 
 
         public ActionResult PrintPDF()
