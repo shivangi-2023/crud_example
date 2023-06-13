@@ -23,8 +23,8 @@ namespace crud_example.Controllers
 
     public class EmployeeController : Controller
     {
-
-        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page)
+        [HttpGet]
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
         {
             ViewBag.CurrentSortOrder = sortingOrder;
             ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
@@ -99,15 +99,34 @@ namespace crud_example.Controllers
         [HttpPost]
         public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
         {
+            /////dropdown
+            string status = formCollectionr["ddlType"];
+            EmpRepository EmpRepo = new EmpRepository();
 
-            ViewData["status"]= status;
-            return View();
+            var viewModel = EmpRepo.GetAllEmployees();
+            IEnumerable<EmpModel> employee = new List<EmpModel>();
+            if (status != "0")
+            {
+                employee = EmpRepo.SoftDelete().Where(x => x.status == status).ToList();
 
+            }
 
+            else
+            {
+                employee = EmpRepo.GetAllEmployees();
+            }
+            ViewBag.Selected = status;
         }
+            //[HttpPost]
+            //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
+            //{
+
+            //    ViewData["status"]= status;
+            //    return View();
+            //}
 
 
-        public ActionResult Details(int id)
+            public ActionResult Details(int id)
         {
             try
             {
@@ -210,67 +229,36 @@ namespace crud_example.Controllers
                 return RedirectToAction("GetAllEmpDetails");
             }
         }
-
-    
-
-        //public List<EmployeeModel> SoftDelete()
-        //{
-        //    try
-        //    {
-        //        connection();
-        //        con.Open();
-        //        IList<EmployeeModel> emp = SqlMapper.Query<EmployeeModel>(con, "sp_softdelete").ToList();
-        //        con.Close();
-        //        return emp.ToList();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-
-        //}
+        
 
 
+            //public ActionResult RestoredEmp()
+            //{
+            //    try
+            //    {
+            //        EmpRepository EmpRepo = new EmpRepository();
+            //        // Get the employee details
+            //        var employee = EmpRepo.GetDeletedEmployees();
 
-        //public ActionResult RestoredEmp()
-        //{
-        //    try
-        //    {
-        //        EmpRepository EmpRepo = new EmpRepository();
-        //        // Get the employee details
-        //        var employee = EmpRepo.GetDeletedEmployees();
-
-        //        if (employee == null)
-        //        {
-        //            ViewBag.ErrorMsg = "No deleted record found";
-        //            return RedirectToAction("GetAllEmpDetails");
-        //        }
-
-
-        //        return View(employee);
-        //    }
-        //    catch
-        //    {
-        //        return RedirectToAction("GetAllEmpDetails");
-        //    }
-        //}
-
-        //public ActionResult Restore(int id)
-        //{
-        //    try
-        //    {
-        //        EmpRepository objRepo = new EmpRepository();
-        //        objRepo.RestoreDeletedEmployee(id);
-        //        return RedirectToAction("GetAllEmpDetails");
-        //    }
-        //    catch
-        //    {
-        //        return RedirectToAction("GetAllEmpDetails");
-        //    }
-        //}
+            //        if (employee == null)
+            //        {
+            //            ViewBag.ErrorMsg = "No deleted record found";
+            //            return RedirectToAction("GetAllEmpDetails");
+            //        }
 
 
-        public ActionResult PrintPDF()
+            //        return View(employee);
+            //    }
+            //    catch
+            //    {
+            //        return RedirectToAction("GetAllEmpDetails");
+            //    }
+            //}
+
+           
+
+
+            public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();

@@ -1,77 +1,90 @@
-﻿@model IEnumerable<crud_example.Models.EmpModel>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Userid)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Username)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CityId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CityName)
-        </th>
-
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Userid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOB)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityName)
-            </td>
+﻿@model crud_example.Models.EmpModel
 
 
-        </tr>
-    }
+    <hr />
+    <style>
+        table {
+            border: 1px solid #87868b;
+        }
 
-</table>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+        td {
+            width: 40px;
+            padding: 5px;
+            border: 1px solid #87868b;
+        }
 
-    <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        @Html.ActionLink("Back to List", "GetAllEmpDetails")
-    </div>
-}
+        th {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #87868b;
+        }
+    </style>
+    <div class="title-heading" style="background-color: lightskyblue; font-size:26px; border:1px solid black">View User</div>
+    <table class="table">
+        <tbody>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Userid)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Userid)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Username)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Password)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DOB)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.DOB)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.Gender)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CityName)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => model.CityName)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <p>
+
+        <a href="@Url.Action("GetAllEmpDetails")" class="btn btn-info">Back to Details</a>
+
+    </p>

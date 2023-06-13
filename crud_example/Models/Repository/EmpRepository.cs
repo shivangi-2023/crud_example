@@ -41,8 +41,7 @@ namespace crud_example.Models.Repository
                 connection();
                 con.Open();
                 con.Execute("AddNewEmpDetails", pram, commandType: CommandType.StoredProcedure);
-
-                
+                               
                 con.Close();
 
             }
@@ -68,7 +67,7 @@ namespace crud_example.Models.Repository
             }
 
 
-            open ddd
+          
         }
         //view users details
         public EmpModel GetEmployeeDetails(int id)
@@ -89,10 +88,7 @@ namespace crud_example.Models.Repository
                 throw ex;
             }
         }
-
-       
-
-
+  
 
         //To Update Employee details
         public void UpdateEmployee(EmpModel empModel)
@@ -148,23 +144,21 @@ namespace crud_example.Models.Repository
             return city.ToList();
         }
 
-        
-        //public void RestoreDeletedEmployee(int id)
-        //{
-        //    try
-        //    {
-        //        DynamicParameters pram = new DynamicParameters();
-        //        pram.Add("Userid", id);
-        //        connection();
-        //        con.Open();
-        //        con.Execute("RestoreDeletedEmpById", pram, commandType: CommandType.StoredProcedure);
-        //        con.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //Log error as per your need 
-        //        throw ex;
-        //    }
-        //}
+        public List<EmpModel> SoftDelete()
+        {
+            try
+            {
+                connection();
+                con.Open();
+                IList<EmpModel> emp = SqlMapper.Query<EmpModel>(con, "sp_softdelete").ToList();
+                con.Close();
+                return emp.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }
