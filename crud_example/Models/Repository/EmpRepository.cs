@@ -17,7 +17,7 @@ namespace crud_example.Models.Repository
         //To Handle connection related activities
         private void connection()
 
-        {
+        {   
             string constr = @"Data Source=192.168.0.121;Initial Catalog=Userdetails_skills;Persist Security Info=True;User ID=sa;Password=123";
 
             //string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
@@ -29,7 +29,7 @@ namespace crud_example.Models.Repository
         {
 
             try
-            {
+            {   
 
                 DynamicParameters pram = new DynamicParameters();
                 pram.Add("Username", empModel.Username);
