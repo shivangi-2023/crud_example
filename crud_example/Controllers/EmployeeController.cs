@@ -24,7 +24,7 @@ namespace crud_example.Controllers
     public class EmployeeController : Controller
     {
         [HttpGet]
-        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page)
         {
             ViewBag.CurrentSortOrder = sortingOrder;
             ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
@@ -84,12 +84,12 @@ namespace crud_example.Controllers
 
             //selction for deleted rec item
 
-            ViewBag.StatusList = new SelectList(new[]
-            {
-                 new SelectListItem { Text = "Active", Value = "1" },
-                 new SelectListItem { Text = "Inactive", Value = "0" }
-            },
-            "Value", "Text", status);
+            //ViewBag.StatusList = new SelectList(new[]
+            //{
+            //     new SelectListItem { Text = "Active", Value = "1" },
+            //     new SelectListItem { Text = "Inactive", Value = "0" }
+            //},
+            //"Value", "Text", status);
 
             return View(employees.ToPagedList(pageNumber, pageSize));
 
@@ -99,8 +99,8 @@ namespace crud_example.Controllers
         [HttpPost]
         public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
         {
-            /////dropdown
-            string status = formCollectionr["ddlType"];
+            ///////dropdown
+            //string status = formCollectionr["ddlType"];
             EmpRepository EmpRepo = new EmpRepository();
 
             var viewModel = EmpRepo.GetAllEmployees();
@@ -116,6 +116,7 @@ namespace crud_example.Controllers
                 employee = EmpRepo.GetAllEmployees();
             }
             ViewBag.Selected = status;
+            return View (employee);
         }
             //[HttpPost]
             //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
