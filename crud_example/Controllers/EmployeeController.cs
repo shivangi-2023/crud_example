@@ -13,7 +13,7 @@ using PagedList.Mvc;
 using System.Web.UI;
 
 namespace crud_example.Controllers
-{
+{   
     using Antlr.Runtime.Misc;
     using Dapper;
     using PagedList;
@@ -96,39 +96,33 @@ namespace crud_example.Controllers
 
         }
 
-        [HttpPost]
-        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
-        {
-            ///////dropdown
-            //string status = formCollectionr["ddlType"];
-            EmpRepository EmpRepo = new EmpRepository();
+        //[HttpPost]
+        //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
+        //{
+        //    ///////dropdown
+        //    //string status = formCollectionr["ddlType"];
+        //    EmpRepository EmpRepo = new EmpRepository();
 
-            var viewModel = EmpRepo.GetAllEmployees();
-            IEnumerable<EmpModel> employee = new List<EmpModel>();
-            if (status != "0")
-            {
-                employee = EmpRepo.SoftDelete().Where(x => x.status == status).ToList();
+        //    var viewModel = EmpRepo.GetAllEmployees();
+        //    IEnumerable<EmpModel> employee = new List<EmpModel>();
+        //    if (status != "0")
+        //    {
+        //       // employee = EmpRepo.SoftDelete().Where(x => x.status == status).ToList();
 
-            }
+        //    }
 
-            else
-            {
-                employee = EmpRepo.GetAllEmployees();
-            }
-            ViewBag.Selected = status;
-            return View (employee);
-        }
-            //[HttpPost]
-            //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
-            //{
-
-            //    ViewData["status"]= status;
-            //    return View();
-            //}
+        //    else
+        //    {
+        //        employee = EmpRepo.GetAllEmployees();
+        //    }
+        //    ViewBag.Selected = status;
+        //    return View(employee);
+        //}
+       
 
 
-            public ActionResult Details(int id)
-        {
+        public ActionResult Details(int id)
+         {
             try
             {
                 EmpRepository EmpRepo = new EmpRepository();
@@ -180,7 +174,7 @@ namespace crud_example.Controllers
             ModelState.Clear();
 
             return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Userid == id));
-           
+         
         }
         // POST:Update the details into database
         [HttpPost]
@@ -230,9 +224,7 @@ namespace crud_example.Controllers
                 return RedirectToAction("GetAllEmpDetails");
             }
         }
-        
-
-
+       
             //public ActionResult RestoredEmp()
             //{
             //    try
@@ -255,10 +247,6 @@ namespace crud_example.Controllers
             //        return RedirectToAction("GetAllEmpDetails");
             //    }
             //}
-
-           
-
-
             public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -279,7 +267,6 @@ namespace crud_example.Controllers
         }
 
 
-
         public void ExportListUsingEPPlus()
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -294,7 +281,6 @@ namespace crud_example.Controllers
             {
                 workSheet.Cells[1, i + 1].Value = properties[i].Name;
             }
-
             for (int i = 0; i < data.Count; i++)
             {
                 for (int j = 0; j < properties.Count; j++)

@@ -39,14 +39,9 @@ namespace crud_example.Models
         public string status { get; set; }
 
         //public bool isActive { get; set; }
-        //public DateTime? DeletedAt { get; set; }
 
 
 
     }
-    //public interface ICustomSoftDelete
-    //{
-    //    bool isActive { get; set; }
-    //    DateTime? DeletedAt { get; set; }
-    //}
+    
 }
