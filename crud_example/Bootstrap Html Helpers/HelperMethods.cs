@@ -61,17 +61,12 @@ namespace System.Web.Mvc.Html
         /// <param name="expression">Model's expression.</param>
         /// <param name="metadata">The metadata from the model.</param>
         /// <param name="tag">The tag to be validated.</param>
-        public static void AddValidationProperties<TModel, TValue>(HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression, TagBuilder tag)
+        public static void AddValidationProperties<TModel, TValue>(HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression, ModelMetadata metadata, TagBuilder tag)
         {
-            // Get MetaData.
-            var metadata = ModelMetadata.FromLambdaExpression(expression, self.ViewData);
-
-            // Do stuff.
             var fieldName = ExpressionHelper.GetExpressionText(expression);
             var fullBindingName = self.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(fieldName);
             var fieldId = TagBuilder.CreateSanitizedId(fullBindingName);
 
-            // Add the validation data-* properties to the tag.
             var validationAttributes = self.GetUnobtrusiveValidationAttributes(fullBindingName, metadata);
             foreach (var key in validationAttributes.Keys)
             {

@@ -29,7 +29,9 @@
         <th>
             @Html.DisplayNameFor(model => model.CityName)
         </th>
-       
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
         <th></th>
     </tr>
 
@@ -60,7 +62,7 @@
             @Html.DisplayFor(modelItem => item.CityName)
         </td>
         <td>
-            <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Restore", new { Id = item.Userid })'">Restore</button>
+            <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Restore", new { Id = item.EmpId })'">Restore</button>
         </td>
       
     </tr>

@@ -13,18 +13,12 @@ using PagedList.Mvc;
 using System.Web.UI;
 
 namespace crud_example.Controllers
-{   
-    using Antlr.Runtime.Misc;
-    using Dapper;
+{
     using PagedList;
-    using System.Drawing;
-    using System.Drawing.Printing;
-    using System.Xml.Linq;
-
     public class EmployeeController : Controller
     {
-        [HttpGet]
-        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page)
+        
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, string status, int? page)
         {
             ViewBag.CurrentSortOrder = sortingOrder;
             ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
@@ -45,15 +39,13 @@ namespace crud_example.Controllers
             }
 
             ViewBag.FilterValue = searchString;
-
+            
             if (!string.IsNullOrEmpty(searchString))
-            {
+            {   
                 employees = employees.Where(e =>
                     e.Username.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper())||
-                    e.Gender.ToUpper().Contains(searchString.ToUpper())
-                //e.Email.ToLower().StartsWith(lowerSearchString) ||
-                //e.Gender.ToLower().StartsWith(lowerSearchString)
-                ).ToList();
+                    e.Gender.ToUpper().Contains(searchString.ToUpper())|| e.CityName.ToUpper().Contains(searchString.ToUpper())
+                  ).ToList();
             }
 
             // Apply sorting order
@@ -79,50 +71,13 @@ namespace crud_example.Controllers
                     break;
             }
 
-            int pageSize = 8;
+            int pageSize = 6;
             int pageNumber = (page ?? 1);
-
-            //selction for deleted rec item
-
-            //ViewBag.StatusList = new SelectList(new[]
-            //{
-            //     new SelectListItem { Text = "Active", Value = "1" },
-            //     new SelectListItem { Text = "Inactive", Value = "0" }
-            //},
-            //"Value", "Text", status);
-
+            //ViewBag.FilterValue = searchString;
             return View(employees.ToPagedList(pageNumber, pageSize));
-
-
         }
-
-        //[HttpPost]
-        //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page, string status)
-        //{
-        //    ///////dropdown
-        //    //string status = formCollectionr["ddlType"];
-        //    EmpRepository EmpRepo = new EmpRepository();
-
-        //    var viewModel = EmpRepo.GetAllEmployees();
-        //    IEnumerable<EmpModel> employee = new List<EmpModel>();
-        //    if (status != "0")
-        //    {
-        //       // employee = EmpRepo.SoftDelete().Where(x => x.status == status).ToList();
-
-        //    }
-
-        //    else
-        //    {
-        //        employee = EmpRepo.GetAllEmployees();
-        //    }
-        //    ViewBag.Selected = status;
-        //    return View(employee);
-        //}
-       
-
-
-        public ActionResult Details(int id)
-         {
+         public ActionResult Details(int id)
+        {
             try
             {
                 EmpRepository EmpRepo = new EmpRepository();
@@ -155,7 +110,6 @@ namespace crud_example.Controllers
                     ViewData["CityList"] = EmpRepo.GetCities();
                     EmpRepo.AddEmployee(Emp);
                     TempData["SuccessMessage"] = "Records added successfully.";
-
                     ModelState.Clear();
                     return View();
                 }
@@ -166,7 +120,6 @@ namespace crud_example.Controllers
                 return View();
             }
         }
-
         public ActionResult EditEmpDetails(int id)
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -174,7 +127,7 @@ namespace crud_example.Controllers
             ModelState.Clear();
 
             return View(EmpRepo.GetAllEmployees().Find(Emp => Emp.Userid == id));
-         
+           
         }
         // POST:Update the details into database
         [HttpPost]
@@ -186,7 +139,6 @@ namespace crud_example.Controllers
                 {
                     EmpRepository EmpRepo = new EmpRepository();
                     ViewData["CityList"] = EmpRepo.GetCities();
-
                     EmpRepo.UpdateEmployee(obj);
                     TempData["SuccessMessage"] = "Records Updated successfully.";
 
@@ -209,7 +161,7 @@ namespace crud_example.Controllers
         public ActionResult DeleteEmp(int id)
         {
             try
-            {
+            {   
                 EmpRepository EmpRepo = new EmpRepository();
                 if (EmpRepo.DeleteEmployee(id))
                 {
@@ -224,30 +176,41 @@ namespace crud_example.Controllers
                 return RedirectToAction("GetAllEmpDetails");
             }
         }
-       
-            //public ActionResult RestoredEmp()
-            //{
-            //    try
-            //    {
-            //        EmpRepository EmpRepo = new EmpRepository();
-            //        // Get the employee details
-            //        var employee = EmpRepo.GetDeletedEmployees();
 
-            //        if (employee == null)
-            //        {
-            //            ViewBag.ErrorMsg = "No deleted record found";
-            //            return RedirectToAction("GetAllEmpDetails");
-            //        }
+        public ActionResult RestoredEmp()
+        {
+            try
+            {   
+                EmpRepository EmpRepo = new EmpRepository();
+                // Get the employee details
+                var employee = EmpRepo.GetDeletedEmployees();
+                if (employee == null)
+                {
+                    ViewBag.ErrorMsg = "No deleted record found";
+                    return RedirectToAction("GetAllEmpDetails");
+                }
+                return View(employee);
+            }
+            catch
+            {
+                return RedirectToAction("GetAllEmpDetails");
+            }
+        }
 
-
-            //        return View(employee);
-            //    }
-            //    catch
-            //    {
-            //        return RedirectToAction("GetAllEmpDetails");
-            //    }
-            //}
-            public ActionResult PrintPDF()
+        public ActionResult Restore(int id)
+        {
+            try
+            {
+                EmpRepository objRepo = new EmpRepository();
+                objRepo.RestoreDeletedEmployee(id);
+                return RedirectToAction("GetAllEmpDetails");
+            }
+            catch
+            {
+                return RedirectToAction("GetAllEmpDetails");
+            }
+        }
+        public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();
@@ -261,10 +224,10 @@ namespace crud_example.Controllers
 
             // Set the custom options for prompting the user to print
             pdf.CustomSwitches = "--print-media-type --header-html \"\" --footer-html \"\"";
-
             // Show the PDF in the browser
             return pdf;
         }
+
 
 
         public void ExportListUsingEPPlus()
@@ -276,11 +239,12 @@ namespace crud_example.Controllers
             var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
             // Load data into the worksheet, excluding the CityId property
-            var properties = typeof(EmpModel).GetProperties().Where(p => p.Name != "CityId").ToList();
+            var properties = typeof(EmpModel).GetProperties().Where(p => p.Name != "CityId" && p.Name != "Status").ToList();
             for (int i = 0; i < properties.Count; i++)
             {
                 workSheet.Cells[1, i + 1].Value = properties[i].Name;
             }
+
             for (int i = 0; i < data.Count; i++)
             {
                 for (int j = 0; j < properties.Count; j++)

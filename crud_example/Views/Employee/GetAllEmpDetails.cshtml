@@ -1,75 +1,240 @@
-﻿@model IEnumerable<crud_example.Models.EmpModel>
+﻿@model IPagedList<crud_example.Models.EmpModel>
+@using PagedList.Mvc;
+@using PagedList;
+@*PagedList.IPagedList<crud_example.Models.EmpModel>*@
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a href="@Url.Action("AddEmployee")" class="btn btn-info">Add New</a>
 </p>
+<hr />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" style="text-align:center">@TempData["SuccessMessage"]</div>
+}
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<div class="form-group">
+    <div class="col-md-12">
+        <div class="col-lg-10">
+            <h3 style="color: black;  border-block-end-color:lightsteelblue; 20px; text-align-last: left">Users</h3>
+
+        </div>
+        <button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
+            <span style="font-size: 16px;">&#128438;</span>
+        </button>
+        <button onclick="location.href='@Url.Action("ExportListUsingEPPlus", "Employee")'; return false;" class="btn btn-dark btn-sm" style="width: 40px;">
+            <span style="font-size: 16px;">&#128190;</span>
+        </button>
+    </div>
+    @using (Html.BeginForm())
+
+    {
+
+        <div class="col-lg-6">
+            @Html.TextBox("searchString", ViewBag.FilterValue as string, new { @placeholder = "Search", @class = "form-control", @style = "width: 300px;" })
+        </div>
+       <div class="col-xs-2">
+            <select id="Status" class="form-control" name="Status">
+                <option value>Show All</option>
+                <option value="1" selected="selected">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+        </div>
+       <div class="col-xs-2">
+           <input type="submit" value="Search" class="btn btn-info btn-sm" style="text-align: center; width:80px" />
+           <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width:50px" onclick="resetSearch()" />
+           @*@Html.TextBox("searchString", ViewBag.FilterValue as string)*@
+           @*<button onclick="location.href='@Url.Action("RestoredEmp", "Employee")';return false;" class="btn btn-primary">Deleted Data</button>*@
+
+       </div>
+    }
+
+
+
+</div>
+
+<style>
+    .black-link {
+        color: black;
+    }
+    thead {
+        background-color: yellow;
+        color: black;
+    }
+
+    table {
+        border: 1px solid black;
+    }
+
+    td {
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid #87868b;
+    }
+
+    th {
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid black;
+        background-color: lightgray;
+    }
+</style>
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Userid)
+            <span style="color: Black">
+                Sr. No.
+            </span>
+        </th>
+        <th style="color:black">
+            <span style="color: Black">
+                @Html.ActionLink("Username", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue }, new { @class = "black-link" })
+
+                @*@Html.DisplayNameFor(model => model.First().Username)*@
+            </span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Username)
+            <span style="color: Black">
+
+                @Html.DisplayNameFor(model => model.First().Password)
+            </span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Password)
+
+            @Html.ActionLink("Email", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue }, new { @class = "black-link" })
+
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            <span style="color: Black">
+                @Html.DisplayNameFor(model => model.First().DOB)
+            </span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DOB)
+            <span style="color: Black">
+                @Html.ActionLink("Gender", "GetAllEmpDetails", new { sortingOrder = ViewBag.SortingName, Filter_Value = ViewBag.FilterValue }, new { @class = "black-link" })
+
+                @*@Html.DisplayNameFor(model => model.First().Gender)*@
+            </span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Gender)
+            <span style="color: Black">
+                @Html.DisplayNameFor(model => model.First().CityName)
+            </span>
         </th>
+       
         <th>
-            @Html.DisplayNameFor(model => model.CityId)
+            <span style="color: Black; font-weight: bold;">Actions</span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CityName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.status)
-        </th>
-        <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Userid)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DOB)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Gender)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CityId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CityName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.status)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditEmpDetails", new {  id=item.Userid  }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Userid }) |
-            @Html.ActionLink("Delete", "DeleteEmp", new { id=item.Userid  })
-        </td>
-    </tr>
+    @{
+        var serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
+    }
+
+    @foreach (var item in Model)
+    {
+        @Html.HiddenFor(model => item.Userid)
+<tr style="background-color: ghostwhite;">
+    <td>
+        @serialNumber
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Username)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Password)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DOB)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Gender)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CityName)
+    </td>
+  
+    <td style="background-color: white;">
+        <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" font-weight: bold;">
+            <i class="fas fa-edit"></i> <!-- Edit Icon -->
+        </button>
+        @*@Html.ActionLink("Delete", "DeleteEmp", new { Id = item.Userid }, new { onclick = "return confirm('Are you sure you wants to delete?');" })*@
+        <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
+            <i class="fas fa-trash"></i>
+        </button>
+
+
+        <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
+            <i class="fas fa-eye"></i>
+        </button>
+    </td>
+</tr>
+        serialNumber++;
+    }
+</table>
+
+
+@*<div class="text-center">
+        Page @(Model.PageCount < Model.PageNumber ? 0: Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, p => Url.Action("GetAllEmpDetails", new { Page = p, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
+    </div>*@
+
+<div class="text-right">
+    @if (Model.PageCount > 0)
+    {
+        <p style="text-align:left">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
+        <p>Page Size:</p>
+        @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
+        @*<p>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
+        @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))*@
+    }
+    else
+    {
+        <p style="text-align:center">No records found.</p>
+    }
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/bootstrap-icons.min.css">
+<script>
+    function resetSearch() {
+        var searchInput = document.getElementById('searchString');
+        searchInput.value = '';
+        searchInput.form.submit();
+    }
+</script>
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true,
+                minDate: new Date(1969, 10 - 1, 25),
+                maxDate: new Date(),
+                showOn: "both",
+                buttonText: "<i class='fa fa-calendar'></i>"
+            });
+        });
+    </script>
 }
 
-</table>
+<script>
+    // Function to display the message
+    function showMessage(message) {
+        alert(message);
+    }
+</script>
