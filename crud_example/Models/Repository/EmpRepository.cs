@@ -27,10 +27,8 @@ namespace crud_example.Models.Repository
         //To Add Employee details
         public void AddEmployee(EmpModel empModel)
         {
-
             try
             {
-
                 DynamicParameters pram = new DynamicParameters();
                 pram.Add("Username", empModel.Username);
                 pram.Add("Password", empModel.Password);
@@ -38,8 +36,6 @@ namespace crud_example.Models.Repository
                 pram.Add("DOB", empModel.DOB);
                 pram.Add("Gender", empModel.Gender);
                 pram.Add("City", empModel.CityId);
-                //pram.Add("Status", empModel.Status);
-
                 connection();
                 con.Open();
                 con.Execute("AddNewEmpDetails", pram, commandType: CommandType.StoredProcedure);
@@ -76,9 +72,7 @@ namespace crud_example.Models.Repository
                 DynamicParameters pram = new DynamicParameters();
                 pram.Add("@Id", id);
                 connection();
-
                 var employee = SqlMapper.Query<EmpModel>(con, "GetDetails", pram, commandType: CommandType.StoredProcedure).FirstOrDefault();
-
                 con.Close();
                 return employee;
             }
@@ -92,7 +86,6 @@ namespace crud_example.Models.Repository
         {
             try
             {
-
                 connection();
                 con.Open();
                 IList<EmpModel> EmpList = SqlMapper.Query<EmpModel>(con, "GetDeletedEmployees").ToList();
@@ -104,9 +97,6 @@ namespace crud_example.Models.Repository
                 throw;
             }
         }
-
-
-
         //To Update Employee details
         public void UpdateEmployee(EmpModel empModel)
         {

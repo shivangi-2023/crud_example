@@ -23,12 +23,8 @@ namespace crud_example.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "BirthDate is required.")]
-
-
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
-
-
         public string Gender { get; set; }
         [Required(ErrorMessage = "City is required.")]
 
@@ -38,14 +34,7 @@ namespace crud_example.Models
         //public bool IsDeleted { get; set; }
         public string Status { get; internal set; }
         //public bool IsDeleted { get; set; }
-
-        
-
-
+        //public bool IsActive { get; set; }
     }
-    //public interface ICustomSoftDelete
-    //{
-    //    bool isActive { get; set; }
-    //    DateTime? DeletedAt { get; set; }
-    //}
+    
 }

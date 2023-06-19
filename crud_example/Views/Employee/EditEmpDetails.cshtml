@@ -5,7 +5,6 @@
 
     <h3>Edit User </h3>
     <hr />
-
     <div>
         <a href="@Url.Action("GetAllEmpDetails")" class="btn btn-info">Back to Details</a>
     </div>
@@ -50,7 +49,6 @@
         </div>
 
     </div>
-
     <br>
     <div class="form-group">
         <br /><br />
@@ -81,18 +79,7 @@
         <br>
         @Html.DropDownList("CityId", new SelectList(ViewData["CityList"] as List<crud_example.Models.City>, "CityId", "CityName", Model.CityId), "-- Select City Name --", new { @class = "Search" })
     </div>
-
-    @*<div class="col-md-10">
-        <br />
-        @Html.Label("City", htmlAttributes: new { @class = "control-label col-md-3", style = "color: white;" })
-        <br>
-        @Html.DropDownList("CityId", new SelectList(ViewData["CityList"] as List<crud_example.Models.City>, "CityId", "CityName"), "-- Select City Name --", new { @class = "Search" })
-
-
-    </div>*@
-
-
-    <div class="form-group">
+  <div class="form-group">
         <div class=" col-md-10">
             <br />
             <button onclick="showmessage('Record Updated successfully...')" class="btn btn-primary btn-block custom-button">Update</button>
@@ -105,8 +92,6 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <link href="@Url.Content("~/Content/site.css")" rel="stylesheet" type="text/css" />
-
-
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">

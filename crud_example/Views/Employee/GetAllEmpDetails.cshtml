@@ -36,11 +36,11 @@
         <div class="col-lg-6">
             @Html.TextBox("searchString", ViewBag.FilterValue as string, new { @placeholder = "Search", @class = "form-control", @style = "width: 300px;" })
         </div>
-       <div class="col-xs-2">
-            <select id="Status" class="form-control" name="Status">
-                <option value>Show All</option>
-                <option value="1" selected="selected">Active</option>
-                <option value="0">Inactive</option>
+        <div class="col-xs-2">
+            <select id="status" class="form-control" name="status">
+                <option value="Show All">Show All</option>
+                <option value="1" @(ViewBag.FilterValue == "1" ? "selected" : "")>Active</option>
+                <option value="0" @(ViewBag.FilterValue == "0" ? "selected" : "")>Inactive</option>
             </select>
         </div>
        <div class="col-xs-2">
@@ -64,11 +64,9 @@
         background-color: yellow;
         color: black;
     }
-
     table {
         border: 1px solid black;
     }
-
     td {
         padding: 5px;
         font-size: 14px;
@@ -193,8 +191,7 @@
         <p style="text-align:left">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
         <p>Page Size:</p>
         @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
-        @*<p>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
-        @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))*@
+      
     }
     else
     {

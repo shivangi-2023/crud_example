@@ -16,7 +16,7 @@ namespace crud_example
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Employee", action = "AddEmployee", id = UrlParameter.Optional }
+                defaults: new { controller = "Employee", action = "GetAllEmpDetails", id = UrlParameter.Optional }
             );
         }
     }

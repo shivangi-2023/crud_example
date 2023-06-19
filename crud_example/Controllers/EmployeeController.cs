@@ -14,6 +14,7 @@ using System.Web.UI;
 
 namespace crud_example.Controllers
 {
+    using Microsoft.Graph;
     using PagedList;
     public class EmployeeController : Controller
     {
@@ -23,7 +24,6 @@ namespace crud_example.Controllers
             ViewBag.CurrentSortOrder = sortingOrder;
             ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
             ViewBag.SortingDate = sortingOrder == "Email" ? "DOB" : "Gender";
-
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();
 
@@ -47,6 +47,30 @@ namespace crud_example.Controllers
                     e.Gender.ToUpper().Contains(searchString.ToUpper())|| e.CityName.ToUpper().Contains(searchString.ToUpper())
                   ).ToList();
             }
+
+    //        List<SelectListItem> statusList = new List<SelectListItem>
+    //{
+    //    new SelectListItem { Value = "", Text = "Show All" },
+    //    new SelectListItem { Value = "1", Text = "Active" },
+    //    new SelectListItem { Value = "0", Text = "Inactive" }
+    //};
+
+    //        ViewBag.StatusList = statusList;
+
+            //// apply filtering based on status if provided
+            //if (status != null && status != "Show All")
+            //{
+            //    bool isactive = (status == "1");
+            //    if (isactive)
+            //    {
+            //        employees = employees.where(e => e.isactive).tolist(); // show all active records
+            //    }
+            //    else
+            //    {
+            //        employees = employees.where(e => !e.isactive).tolist(); // show all deleted records
+            //    }
+            //}
+
 
             // Apply sorting order
             switch (sortingOrder)
@@ -76,19 +100,21 @@ namespace crud_example.Controllers
             //ViewBag.FilterValue = searchString;
             return View(employees.ToPagedList(pageNumber, pageSize));
         }
-         public ActionResult Details(int id)
-        {
-            try
-            {
-                EmpRepository EmpRepo = new EmpRepository();
-                EmpModel Emp = EmpRepo.GetEmployeeDetails(id);
-                return View("Details", Emp);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //[HttpPost]
+        //public ActionResult GetAllEmpDetails(string status)
+        //{
+        //    // Convert the selected value to a nullable boolean
+        //    bool? statusValue = string.IsNullOrEmpty(status) ? (bool?)null : status == "1";
+
+        //    // Call the stored procedure with the selected status value
+        //    var employees = context.Database.SqlQuery<Employee>("GetEmployees @Status", new SqlParameter("@Status", statusValue)).ToList();
+
+        //    // Other code for processing the results and passing them to the view
+
+        //    return View(employees);
+        //}
+       
+      
 
         //GET: Employee/AddEmployee
         public ActionResult AddEmployee()
@@ -176,40 +202,40 @@ namespace crud_example.Controllers
                 return RedirectToAction("GetAllEmpDetails");
             }
         }
-
-        public ActionResult RestoredEmp()
+        public ActionResult Details(int id)
         {
             try
-            {   
+            {
                 EmpRepository EmpRepo = new EmpRepository();
-                // Get the employee details
-                var employee = EmpRepo.GetDeletedEmployees();
-                if (employee == null)
-                {
-                    ViewBag.ErrorMsg = "No deleted record found";
-                    return RedirectToAction("GetAllEmpDetails");
-                }
-                return View(employee);
+                EmpModel Emp = EmpRepo.GetEmployeeDetails(id);
+                return View("Details", Emp);
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("GetAllEmpDetails");
+                throw ex;
             }
         }
+        //public ActionResult RestoredEmp()
+        //{
+        //    try
+        //    {   
+        //        EmpRepository EmpRepo = new EmpRepository();
+        //        // Get the employee details
+        //        var employee = EmpRepo.GetDeletedEmployees();
+        //        if (employee == null)
+        //        {
+        //            ViewBag.ErrorMsg = "No deleted record found";
+        //            return RedirectToAction("GetAllEmpDetails");
+        //        }
+        //        return View(employee);
+        //    }
+        //    catch
+        //    {
+        //        return RedirectToAction("GetAllEmpDetails");
+        //    }
+        //}
 
-        public ActionResult Restore(int id)
-        {
-            try
-            {
-                EmpRepository objRepo = new EmpRepository();
-                objRepo.RestoreDeletedEmployee(id);
-                return RedirectToAction("GetAllEmpDetails");
-            }
-            catch
-            {
-                return RedirectToAction("GetAllEmpDetails");
-            }
-        }
+
         public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
@@ -239,7 +265,7 @@ namespace crud_example.Controllers
             var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
             // Load data into the worksheet, excluding the CityId property
-            var properties = typeof(EmpModel).GetProperties().Where(p => p.Name != "CityId" && p.Name != "Status").ToList();
+            var properties = typeof(EmpModel).GetProperties().Where(p => p.Name != "CityId" && p.Name != "Status" ).ToList();
             for (int i = 0; i < properties.Count; i++)
             {
                 workSheet.Cells[1, i + 1].Value = properties[i].Name;
