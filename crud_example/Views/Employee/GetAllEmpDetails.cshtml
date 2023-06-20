@@ -29,44 +29,45 @@
             <span style="font-size: 16px;">&#128190;</span>
         </button>
     </div>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("GetAllEmpDetails", "Employee", FormMethod.Get))
 
     {
 
         <div class="col-lg-6">
             @Html.TextBox("searchString", ViewBag.FilterValue as string, new { @placeholder = "Search", @class = "form-control", @style = "width: 300px;" })
         </div>
+
+
         <div class="col-xs-2">
             <select id="status" class="form-control" name="status">
-                <option value="Show All">Show All</option>
+                <option value="">Show All</option>
                 <option value="1" @(ViewBag.FilterValue == "1" ? "selected" : "")>Active</option>
                 <option value="0" @(ViewBag.FilterValue == "0" ? "selected" : "")>Inactive</option>
             </select>
         </div>
-       <div class="col-xs-2">
-           <input type="submit" value="Search" class="btn btn-info btn-sm" style="text-align: center; width:80px" />
-           <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width:50px" onclick="resetSearch()" />
-           @*@Html.TextBox("searchString", ViewBag.FilterValue as string)*@
-           @*<button onclick="location.href='@Url.Action("RestoredEmp", "Employee")';return false;" class="btn btn-primary">Deleted Data</button>*@
-
-       </div>
+        <div class="col-xs-2">
+            <input type="submit" value="Search" class="btn btn-info btn-sm" style="text-align: center; width:80px" />
+            <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width:50px" onclick="resetSearch()" />
+            @*@Html.TextBox("searchString", ViewBag.FilterValue as string)*@
+            @*<button onclick="location.href='@Url.Action("RestoredEmp", "Employee")';return false;" class="btn btn-primary">Deleted Data</button>*@
+        </div>
     }
-
-
-
 </div>
 
 <style>
     .black-link {
         color: black;
     }
+
     thead {
         background-color: yellow;
         color: black;
     }
+
     table {
         border: 1px solid black;
     }
+
     td {
         padding: 5px;
         font-size: 14px;
@@ -123,7 +124,7 @@
                 @Html.DisplayNameFor(model => model.First().CityName)
             </span>
         </th>
-       
+
         <th>
             <span style="color: Black; font-weight: bold;">Actions</span>
         </th>
@@ -136,44 +137,45 @@
     @foreach (var item in Model)
     {
         @Html.HiddenFor(model => item.Userid)
-<tr style="background-color: ghostwhite;">
-    <td>
-        @serialNumber
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Username)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Password)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Email)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.DOB)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Gender)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.CityName)
-    </td>
-  
-    <td style="background-color: white;">
-        <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" font-weight: bold;">
-            <i class="fas fa-edit"></i> <!-- Edit Icon -->
-        </button>
-        @*@Html.ActionLink("Delete", "DeleteEmp", new { Id = item.Userid }, new { onclick = "return confirm('Are you sure you wants to delete?');" })*@
-        <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
-            <i class="fas fa-trash"></i>
-        </button>
+        <tr style="background-color: ghostwhite;">
+            <td>
+                @serialNumber
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CityName)
+            </td>
 
-
-        <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
-            <i class="fas fa-eye"></i>
-        </button>
-    </td>
-</tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>*@
+            <td style="background-color: white;">
+                <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" font-weight: bold;">
+                    <i class="fas fa-edit"></i> <!-- Edit Icon -->
+                </button>
+                @*@Html.ActionLink("Delete", "DeleteEmp", new { Id = item.Userid }, new { onclick = "return confirm('Are you sure you wants to delete?');" })*@
+                <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold" >
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        </tr>
         serialNumber++;
     }
 </table>
@@ -191,7 +193,7 @@
         <p style="text-align:left">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
         <p>Page Size:</p>
         @Html.PagedListPager(Model, page => Url.Action("GetAllEmpDetails", new { Page = page, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
-      
+
     }
     else
     {
@@ -199,6 +201,7 @@
     }
 </div>
 
+    
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/bootstrap-icons.min.css">
 <script>

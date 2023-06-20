@@ -11,24 +11,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using PagedList.Mvc;
 using System.Web.UI;
+using Microsoft.Graph;
+
 
 namespace crud_example.Controllers
-{
-    using Microsoft.Graph;
-    using PagedList;
+{  
     public class EmployeeController : Controller
-    {
-        
-        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, string status, int? page)
+    {        
+        public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page,int? status)
         {
             ViewBag.CurrentSortOrder = sortingOrder;
             ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
-            ViewBag.SortingDate = sortingOrder == "Email" ? "DOB" : "Gender";
+            ViewBag.SortingDate = sortingOrder == "Email" ? "DOB" : "Gender";   
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();
-
             // Apply search filter if a search string is provided
-
             if (searchString != null)
             {
                 page = 1;
@@ -39,7 +36,6 @@ namespace crud_example.Controllers
             }
 
             ViewBag.FilterValue = searchString;
-            
             if (!string.IsNullOrEmpty(searchString))
             {   
                 employees = employees.Where(e =>
@@ -48,29 +44,27 @@ namespace crud_example.Controllers
                   ).ToList();
             }
 
-    //        List<SelectListItem> statusList = new List<SelectListItem>
-    //{
-    //    new SelectListItem { Value = "", Text = "Show All" },
-    //    new SelectListItem { Value = "1", Text = "Active" },
-    //    new SelectListItem { Value = "0", Text = "Inactive" }
-    //};
-
-    //        ViewBag.StatusList = statusList;
-
-            //// apply filtering based on status if provided
-            //if (status != null && status != "Show All")
+            //List<SelectListItem> statusList = new List<SelectListItem>
             //{
-            //    bool isactive = (status == "1");
-            //    if (isactive)
-            //    {
-            //        employees = employees.where(e => e.isactive).tolist(); // show all active records
-            //    }
-            //    else
-            //    {
-            //        employees = employees.where(e => !e.isactive).tolist(); // show all deleted records
-            //    }
-            //}
+            //    new SelectListItem { Value = "", Text = "Show All" },
+            //    new SelectListItem { Value = "1", Text = "Active" },
+            //    new SelectListItem { Value = "0", Text = "Inactive" }
+            //};8
 
+            //ViewBag.StatusList = statusList;
+
+            //}
+            //Apply filtering based on status if provided
+                if (status == 1)
+                {
+                //employees = employees.Where(e => e.Status == status.ToString()).ToList(); // Show active records
+                employees = EmpRepo.Softdeletefilter(status);//add status para
+                 }
+                else if (status == 0)
+                {
+                //employees = employees.Where(e => e.Status == status.ToString()).ToList(); // Show deleted records
+                employees = EmpRepo.Softdeletefilter(status);
+            }
 
             // Apply sorting order
             switch (sortingOrder)
@@ -94,27 +88,66 @@ namespace crud_example.Controllers
                     employees = employees.OrderBy(e => e.Username).ToList();
                     break;
             }
-
             int pageSize = 6;
             int pageNumber = (page ?? 1);
-            //ViewBag.FilterValue = searchString;
-            return View(employees.ToPagedList(pageNumber, pageSize));
+            //////ViewBag.FilterValue = searchString;
+             return View(employees.ToPagedList(pageNumber, pageSize));            
         }
         //[HttpPost]
-        //public ActionResult GetAllEmpDetails(string status)
+        //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page,string status)
         //{
-        //    // Convert the selected value to a nullable boolean
-        //    bool? statusValue = string.IsNullOrEmpty(status) ? (bool?)null : status == "1";
+        //    ViewBag.CurrentSortOrder = sortingOrder;
+        //    ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
+        //    ViewBag.SortingDate = sortingOrder == "Email" ? "DOB" : "Gender";
+        //    EmpRepository EmpRepo = new EmpRepository();
+        //    var employees = EmpRepo.GetAllEmployees();
+        //    // Apply search filter if a search string is provided
+        //    if (searchString != null)
+        //    {
+        //        page = 1;
+        //    }
+        //    else
+        //    {
+        //        searchString = Filter_Value;
+        //    }
 
-        //    // Call the stored procedure with the selected status value
-        //    var employees = context.Database.SqlQuery<Employee>("GetEmployees @Status", new SqlParameter("@Status", statusValue)).ToList();
-
-        //    // Other code for processing the results and passing them to the view
-
-        //    return View(employees);
+        //    ViewBag.FilterValue = searchString;
+        //    if (!string.IsNullOrEmpty(searchString))
+        //    {
+        //        employees = employees.Where(e =>
+        //            e.Username.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper()) ||
+        //            e.Gender.ToUpper().Contains(searchString.ToUpper()) || e.CityName.ToUpper().Contains(searchString.ToUpper())
+        //          ).ToList();
+        //    }
+        //    // Apply sorting order
+        //    switch (sortingOrder)
+        //    {
+        //        case "Username":
+        //            employees = employees.OrderBy(e => e.Username).ToList();
+        //            break;
+        //        case "Email":
+        //            employees = employees.OrderBy(e => e.Email).ToList();
+        //            break;
+        //        case "DOB":
+        //            employees = employees.OrderBy(e => e.DOB).ToList();
+        //            break;
+        //        case "Gender":
+        //            employees = employees.OrderBy(e => e.Gender).ToList();
+        //            break;
+        //        case "CityName":
+        //            employees = employees.OrderBy(e => e.CityName).ToList();
+        //            break;
+        //        default:
+        //            employees = employees.OrderBy(e => e.Username).ToList();
+        //            break;
+        //    }
+        //    int pageSize = 6;
+        //    int pageNumber = (page ?? 1);
+        //    //////ViewBag.FilterValue = searchString;
+        //    return View(employees.ToPagedList(pageNumber, pageSize));           
         //}
-       
-      
+
+
 
         //GET: Employee/AddEmployee
         public ActionResult AddEmployee()
@@ -167,7 +200,6 @@ namespace crud_example.Controllers
                     ViewData["CityList"] = EmpRepo.GetCities();
                     EmpRepo.UpdateEmployee(obj);
                     TempData["SuccessMessage"] = "Records Updated successfully.";
-
                     return RedirectToAction("EditEmpDetails");
                 }
                 else
@@ -182,8 +214,6 @@ namespace crud_example.Controllers
             }
         }
         // GET: Delete  Employee details by id
-
-
         public ActionResult DeleteEmp(int id)
         {
             try
