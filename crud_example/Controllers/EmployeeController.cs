@@ -43,29 +43,17 @@ namespace crud_example.Controllers
                     e.Gender.ToUpper().Contains(searchString.ToUpper())|| e.CityName.ToUpper().Contains(searchString.ToUpper())
                   ).ToList();
             }
-
-            //List<SelectListItem> statusList = new List<SelectListItem>
-            //{
-            //    new SelectListItem { Value = "", Text = "Show All" },
-            //    new SelectListItem { Value = "1", Text = "Active" },
-            //    new SelectListItem { Value = "0", Text = "Inactive" }
-            //};8
-
-            //ViewBag.StatusList = statusList;
-
-            //}
+                     
             //Apply filtering based on status if provided
                 if (status == 1)
                 {
-                //employees = employees.Where(e => e.Status == status.ToString()).ToList(); // Show active records
-                employees = EmpRepo.Softdeletefilter(status);//add status para
+               
+                employees = EmpRepo.Softdeletefilter(status);
                  }
                 else if (status == 0)
                 {
-                //employees = employees.Where(e => e.Status == status.ToString()).ToList(); // Show deleted records
                 employees = EmpRepo.Softdeletefilter(status);
             }
-
             // Apply sorting order
             switch (sortingOrder)
             {
@@ -88,67 +76,12 @@ namespace crud_example.Controllers
                     employees = employees.OrderBy(e => e.Username).ToList();
                     break;
             }
-            int pageSize = 6;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
-            //////ViewBag.FilterValue = searchString;
-             return View(employees.ToPagedList(pageNumber, pageSize));            
+            return View(employees.ToPagedList(pageNumber, pageSize));            
         }
         //[HttpPost]
-        //public ActionResult GetAllEmpDetails(string sortingOrder, string searchString, string Filter_Value, int? page,string status)
-        //{
-        //    ViewBag.CurrentSortOrder = sortingOrder;
-        //    ViewBag.SortingName = String.IsNullOrEmpty(sortingOrder) ? "Username" : "";
-        //    ViewBag.SortingDate = sortingOrder == "Email" ? "DOB" : "Gender";
-        //    EmpRepository EmpRepo = new EmpRepository();
-        //    var employees = EmpRepo.GetAllEmployees();
-        //    // Apply search filter if a search string is provided
-        //    if (searchString != null)
-        //    {
-        //        page = 1;
-        //    }
-        //    else
-        //    {
-        //        searchString = Filter_Value;
-        //    }
-
-        //    ViewBag.FilterValue = searchString;
-        //    if (!string.IsNullOrEmpty(searchString))
-        //    {
-        //        employees = employees.Where(e =>
-        //            e.Username.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper()) ||
-        //            e.Gender.ToUpper().Contains(searchString.ToUpper()) || e.CityName.ToUpper().Contains(searchString.ToUpper())
-        //          ).ToList();
-        //    }
-        //    // Apply sorting order
-        //    switch (sortingOrder)
-        //    {
-        //        case "Username":
-        //            employees = employees.OrderBy(e => e.Username).ToList();
-        //            break;
-        //        case "Email":
-        //            employees = employees.OrderBy(e => e.Email).ToList();
-        //            break;
-        //        case "DOB":
-        //            employees = employees.OrderBy(e => e.DOB).ToList();
-        //            break;
-        //        case "Gender":
-        //            employees = employees.OrderBy(e => e.Gender).ToList();
-        //            break;
-        //        case "CityName":
-        //            employees = employees.OrderBy(e => e.CityName).ToList();
-        //            break;
-        //        default:
-        //            employees = employees.OrderBy(e => e.Username).ToList();
-        //            break;
-        //    }
-        //    int pageSize = 6;
-        //    int pageNumber = (page ?? 1);
-        //    //////ViewBag.FilterValue = searchString;
-        //    return View(employees.ToPagedList(pageNumber, pageSize));           
-        //}
-
-
-
+         
         //GET: Employee/AddEmployee
         public ActionResult AddEmployee()
         {
@@ -206,7 +139,6 @@ namespace crud_example.Controllers
                 {
                     return View(obj);
                 }
-
             }
             catch
             {
@@ -222,7 +154,6 @@ namespace crud_example.Controllers
                 if (EmpRepo.DeleteEmployee(id))
                 {
                     TempData["SuccessMessage"] = "Records Deleted successfully.";
-
                 }
 
                 return RedirectToAction("GetAllEmpDetails");
@@ -245,28 +176,23 @@ namespace crud_example.Controllers
                 throw ex;
             }
         }
-        //public ActionResult RestoredEmp()
-        //{
-        //    try
-        //    {   
-        //        EmpRepository EmpRepo = new EmpRepository();
-        //        // Get the employee details
-        //        var employee = EmpRepo.GetDeletedEmployees();
-        //        if (employee == null)
-        //        {
-        //            ViewBag.ErrorMsg = "No deleted record found";
-        //            return RedirectToAction("GetAllEmpDetails");
-        //        }
-        //        return View(employee);
-        //    }
-        //    catch
-        //    {
-        //        return RedirectToAction("GetAllEmpDetails");
-        //    }
-        //}
+        public ActionResult RestoreEmp(int id)
+        {
+            try
+            {
+                EmpRepository EmpRepo = new EmpRepository();
+                EmpRepo.RestoreDeletedEmployee(id); // Assuming it's a void method
 
+                TempData["SuccessMessage"] = "Records restored successfully.";
 
-        public ActionResult PrintPDF()
+                return RedirectToAction("GetAllEmpDetails", "Employee");
+            }
+            catch
+            {
+                return RedirectToAction("GetAllEmpDetails", "Employee");
+            }
+        }
+         public ActionResult PrintPDF()
         {
             EmpRepository EmpRepo = new EmpRepository();
             var employees = EmpRepo.GetAllEmployees();
@@ -283,8 +209,6 @@ namespace crud_example.Controllers
             // Show the PDF in the browser
             return pdf;
         }
-
-
 
         public void ExportListUsingEPPlus()
         {

@@ -19,7 +19,6 @@ namespace crud_example.Models.Repository
 
         {
             string constr = @"Data Source=192.168.0.121;Initial Catalog=Userdetails_skills;Persist Security Info=True;User ID=sa;Password=123";
-
             //string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
             con = new SqlConnection(constr);
         }
@@ -66,7 +65,6 @@ namespace crud_example.Models.Repository
 
         }
 
-
         //view users details
         public EmpModel GetEmployeeDetails(int id)
         {
@@ -84,9 +82,6 @@ namespace crud_example.Models.Repository
                 throw ex;
             }
         }
-
-        
-       
         //To Update Employee details
         public void UpdateEmployee(EmpModel empModel)
         {

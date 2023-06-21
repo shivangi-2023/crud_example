@@ -1,10 +1,9 @@
 ﻿@model IPagedList<crud_example.Models.EmpModel>
 @using PagedList.Mvc;
 @using PagedList;
-@*PagedList.IPagedList<crud_example.Models.EmpModel>*@
 
 <p>
-    <a href="@Url.Action("AddEmployee")" class="btn btn-info">Add New</a>
+    <a href="@Url.Action("AddEmployee")" class="btn btn-info" style="background-color: dodgerblue;" >Add New</a>
 </p>
 <hr />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
@@ -20,7 +19,7 @@
     <div class="col-md-12">
         <div class="col-lg-10">
             <h3 style="color: black;  border-block-end-color:lightsteelblue; 20px; text-align-last: left">Users</h3>
-
+            
         </div>
         <button onclick="location.href='@Url.Action("PrintPDF", "Employee")'; return true;" class="btn btn-dark btn-sm" style="width: 40px;">
             <span style="font-size: 16px;">&#128438;</span>
@@ -37,19 +36,16 @@
             @Html.TextBox("searchString", ViewBag.FilterValue as string, new { @placeholder = "Search", @class = "form-control", @style = "width: 300px;" })
         </div>
 
-
         <div class="col-xs-2">
             <select id="status" class="form-control" name="status">
                 <option value="">Show All</option>
-                <option value="1" @(ViewBag.FilterValue == "1" ? "selected" : "")>Active</option>
-                <option value="0" @(ViewBag.FilterValue == "0" ? "selected" : "")>Inactive</option>
+                <option value="1" @(ViewBag.FilterValue == "1" ? "selected='selected'" : "")>Active</option>
+                <option value="0" @(ViewBag.FilterValue == "0" ? "selected='selected'" : "")>Inactive</option>
             </select>
-        </div>
+         </div>
         <div class="col-xs-2">
-            <input type="submit" value="Search" class="btn btn-info btn-sm" style="text-align: center; width:80px" />
-            <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width:50px" onclick="resetSearch()" />
-            @*@Html.TextBox("searchString", ViewBag.FilterValue as string)*@
-            @*<button onclick="location.href='@Url.Action("RestoredEmp", "Employee")';return false;" class="btn btn-primary">Deleted Data</button>*@
+            <input type="submit" value="Search" class="btn btn-info btn-sm" style="text-align: center; width:80px; background-color:dodgerblue" />
+            <input type="button" value="Reset" class="btn btn-info btn-sm" style="text-align: center; width: 50px; background-color: dodgerblue" onclick="resetSearch()" />
         </div>
     }
 </div>
@@ -81,7 +77,11 @@
         background-color: lightgray;
     }
 </style>
-
+<style>
+    .hide-column {
+        display: none;
+    }
+</style>
 <table class="table">
     <tr>
         <th>
@@ -125,11 +125,14 @@
             </span>
         </th>
 
+        <th class="hide-column">
+            <span style="color: Black; font-weight: bold;">Status</span>
+        </th>
         <th>
             <span style="color: Black; font-weight: bold;">Actions</span>
         </th>
     </tr>
-
+   
     @{
         var serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
     }
@@ -160,32 +163,38 @@
                 @Html.DisplayFor(modelItem => item.CityName)
             </td>
 
-            @*<td>
+            <td class="hide-column">
                     @Html.DisplayFor(modelItem => item.Status)
-                </td>*@
+            </td>
             <td style="background-color: white;">
-                <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" font-weight: bold;">
-                    <i class="fas fa-edit"></i> <!-- Edit Icon -->
-                </button>
-                @*@Html.ActionLink("Delete", "DeleteEmp", new { Id = item.Userid }, new { onclick = "return confirm('Are you sure you wants to delete?');" })*@
-                <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold" >
-                    <i class="fas fa-eye"></i>
-                </button>
+                @if (item.Status != 0)
+                {
+                    <button onclick="location.href='@Url.Action("EditEmpDetails", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm" title="Edit" font-weight: bold;">
+                        <i class="fas fa-edit"></i> <!-- Edit Icon -->
+                    </button>
+                  
+                    <button onclick="if(confirm('Are you sure you want to delete?')){ location.href='@Url.Action("DeleteEmp", "Employee", new { id = item.Userid })'; }" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                }
+                @if (item.Status == 0)
+                {
+                    <button onclick="location.href='@Url.Action("Details", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="location.href='@Url.Action("RestoreEmp", "Employee", new { id = item.Userid })'" class="btn btn-outline-info btn-sm font-weight-bold">
+                        <i class="fas fa-undo"></i> <!-- Restore Icon -->
+                    </button>
+                }
+          
             </td>
         </tr>
         serialNumber++;
     }
 </table>
-
-
-@*<div class="text-center">
-        Page @(Model.PageCount < Model.PageNumber ? 0: Model.PageNumber) of @Model.PageCount
-
-        @Html.PagedListPager(Model, p => Url.Action("GetAllEmpDetails", new { Page = p, Sorting_Order = ViewBag.SortingOrder, searchString = ViewBag.FilterValue as string }))
-    </div>*@
 
 <div class="text-right">
     @if (Model.PageCount > 0)

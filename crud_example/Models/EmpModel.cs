@@ -31,8 +31,8 @@ namespace crud_example.Models
         public int CityId { get; set; }
 
         public String CityName { get; set; }
-        //public bool IsDeleted { get; set; }
-        public string Status { get; set; }
+       
+        public int Status { get; set; }
      
     }
     
